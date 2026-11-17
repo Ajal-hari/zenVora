@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Verify Email</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: linear-gradient(
+                135deg,
+                #667eea,
+                #764ba2
+            );
+        }
+
+        .otp-card {
+            width: 400px;
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .description {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .email {
+            color: #667eea;
+            font-weight: bold;
+            margin: 15px 0;
+            word-break: break-word;
+        }
+
+        .otp-input {
+            width: 100%;
+
+            padding: 15px;
+
+            border: 2px solid #ddd;
+            border-radius: 10px;
+
+            font-size: 25px;
+
+            text-align: center;
+
+            letter-spacing: 8px;
+
+            outline: none;
+
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .otp-input:focus {
+            border-color: #667eea;
+        }
+
+        .verify-btn {
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #667eea;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .verify-btn:hover {
+            background: #5568d9;
+        }
+
+        .resend {
+            display: inline-block;
+
+            margin-top: 20px;
+
+            color: #667eea;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .resend:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 10px;
+
+            margin: 15px 0;
+
+            border-radius: 8px;
+
+            background: #f1f1f1;
+
+            font-size: 14px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="otp-card">
+
+    <div class="icon">
+        📧
+    </div>
+
+    <h2>Verify Your Email</h2>
+
+    <p class="description">
+        We have sent a 6-digit verification code to:
+    </p>
+
+    <div class="email">
+        {{ email }}
+    </div>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="otp"
+            class="otp-input"
+            placeholder="000000"
+            maxlength="6"
+            pattern="[0-9]{6}"
+            inputmode="numeric"
+            required
+        >
+
+        <button
+            type="submit"
+            class="verify-btn">
+
+            VERIFY OTP
+
+        </button>
+
+    </form>
+
+    <form method="post" action="{% url 'resend_otp' %}">
+        {% csrf_token %}
+        <button type="submit" class="resend">Resend OTP</button>
+    </form>
+
+</div>
+
+</body>
+</html>

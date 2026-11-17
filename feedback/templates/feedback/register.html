@@ -1,0 +1,1395 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | ZenVora</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --blue: #345cf4;
+    --purple: #8051eb;
+    --navy: #152849;
+    --muted: #718096;
+    --border: #dfe5f0;
+    --error: #d93449;
+    --success: #15966b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    color: var(--navy);
+    background: #f8faff;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ==============================================
+   TWO-COLUMN REGISTRATION LAYOUT
+============================================== */
+
+.register-container {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    min-height: 100vh;
+}
+
+/* ==============================================
+   REALISTIC STUDENT PHOTOGRAPH
+   Different from login page
+============================================== */
+
+.image-section {
+    position: relative;
+    min-height: 100vh;
+    padding: 46px 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    background-color: #516779;
+
+    background-image:
+        linear-gradient(
+            180deg,
+            rgba(9, 23, 44, 0.42) 0%,
+            rgba(9, 23, 44, 0.16) 35%,
+            rgba(9, 23, 44, 0.78) 100%
+        ),
+        url("https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1800&q=85");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ==============================================
+   BRAND
+============================================== */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: white;
+}
+
+.brand-logo {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+
+    background: linear-gradient(
+        135deg,
+        var(--blue),
+        #9753ed
+    );
+
+    color: white;
+    font-size: 29px;
+    font-weight: 900;
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+
+.brand h2 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.brand p {
+    margin-top: 4px;
+    font-size: 10px;
+    color: rgba(255,255,255,.88);
+}
+
+/* ==============================================
+   LEFT WELCOME CONTENT
+============================================== */
+
+.welcome-content {
+    max-width: 490px;
+}
+
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 17px;
+    margin-bottom: 24px;
+
+    border: 1px solid rgba(255,255,255,.42);
+    border-radius: 30px;
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(12px);
+
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .7px;
+}
+
+.welcome-content h1 {
+    font-size: clamp(39px, 4vw, 61px);
+    font-weight: 900;
+    line-height: 1.13;
+    letter-spacing: -2.4px;
+    color: white;
+    margin-bottom: 24px;
+}
+
+.welcome-content h1 span {
+    display: block;
+    color: #a9e8ff;
+}
+
+.welcome-description {
+    max-width: 440px;
+    color: rgba(255,255,255,.94);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.9;
+}
+
+/* ==============================================
+   FEATURE CARD
+============================================== */
+
+.feature-card {
+    margin-top: 30px;
+    padding: 22px;
+    max-width: 465px;
+
+    background: rgba(255,255,255,.13);
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 20px;
+    backdrop-filter: blur(14px);
+}
+
+.feature-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .6px;
+    color: white;
+    margin-bottom: 17px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 0;
+}
+
+.feature-icon {
+    width: 47px;
+    height: 47px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: rgba(255,255,255,.18);
+    font-size: 22px;
+}
+
+.feature-text h3 {
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.feature-text p {
+    color: rgba(255,255,255,.86);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.image-footer {
+    color: rgba(255,255,255,.85);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .5px;
+}
+
+/* ==============================================
+   RIGHT REGISTRATION SECTION
+============================================== */
+
+.register-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px 32px;
+    background: #f8faff;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 650px;
+    padding: 33px 35px;
+
+    background: white;
+    border: 1px solid #edf0f7;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(29,53,93,.07);
+}
+
+/* ==============================================
+   FORM HEADER
+============================================== */
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header-icon {
+    width: 53px;
+    height: 53px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 13px;
+    border-radius: 15px;
+    background: #edf1ff;
+    font-size: 25px;
+}
+
+.header h2 {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 9px;
+}
+
+.header h2 span {
+    color: var(--blue);
+}
+
+.header p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* ==============================================
+   DJANGO MESSAGES
+============================================== */
+
+.messages {
+    margin-bottom: 16px;
+}
+
+.message {
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 9px;
+    font-size: 12px;
+    line-height: 1.6;
+    background: #eef3ff;
+    color: #254bb8;
+}
+
+.message.error {
+    background: #fff0f0;
+    color: #bb2534;
+}
+
+.message.success {
+    background: #e8f9f0;
+    color: #147d52;
+}
+
+.message.warning {
+    background: #fff6df;
+    color: #946200;
+}
+
+/* ==============================================
+   FORM GRID
+============================================== */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px 18px;
+}
+
+.form-group {
+    min-width: 0;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #293b56;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.input-box {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8b9ab6;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.form-control {
+    width: 100%;
+    height: 49px;
+    padding: 0 13px 0 42px;
+
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: #fbfcff;
+
+    outline: none;
+    color: var(--navy);
+    font-family: inherit;
+    font-size: 12px;
+    transition: .2s;
+}
+
+.form-control::placeholder {
+    color: #9ca8b8;
+}
+
+.form-control:focus {
+    background: white;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(52,92,244,.09);
+}
+
+.form-control.invalid {
+    border-color: var(--error);
+    background: #fffafa;
+}
+
+.form-control.valid {
+    border-color: var(--success);
+}
+
+select.form-control {
+    cursor: pointer;
+    padding-right: 25px;
+}
+
+.helper {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.field-error {
+    display: none;
+    margin-top: 6px;
+    color: var(--error);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.field-error.show {
+    display: block;
+}
+
+/* ==============================================
+   PASSWORD
+============================================== */
+
+.password-box .form-control {
+    padding-right: 65px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+
+    border: none;
+    background: transparent;
+    color: var(--blue);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 8px 4px;
+    cursor: pointer;
+}
+
+.password-strength {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.password-strength.good {
+    color: var(--success);
+}
+
+.password-strength.bad {
+    color: var(--error);
+}
+
+/* ==============================================
+   SUBMIT BUTTON
+============================================== */
+
+.submit-btn {
+    width: 100%;
+    height: 52px;
+    margin-top: 23px;
+    border: none;
+    border-radius: 11px;
+
+    background: linear-gradient(
+        110deg,
+        #315cf5,
+        #8051eb
+    );
+
+    color: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+
+    box-shadow: 0 10px 24px rgba(36,87,245,.19);
+    transition: .25s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(36,87,245,.28);
+}
+
+.submit-btn:disabled {
+    opacity: .7;
+    cursor: wait;
+    transform: none;
+}
+
+/* ==============================================
+   BOTTOM LINKS
+============================================== */
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 20px 0 15px;
+    color: #9eabc1;
+    font-size: 11px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e5eaf3;
+}
+
+.login-text {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.login-text a {
+    color: var(--blue);
+    font-weight: 800;
+}
+
+.home-link {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.home-link:hover,
+.login-text a:hover {
+    color: #2449cc;
+}
+
+/* ==============================================
+   RESPONSIVE
+============================================== */
+
+@media (max-width: 1100px) {
+    .register-container {
+        grid-template-columns: 43% 57%;
+    }
+
+    .image-section {
+        padding: 35px;
+    }
+
+    .welcome-content h1 {
+        font-size: 43px;
+    }
+
+    .register-section {
+        padding: 25px;
+    }
+
+    .register-card {
+        padding: 30px 24px;
+    }
+}
+
+@media (max-width: 850px) {
+    .register-container {
+        grid-template-columns: 1fr;
+    }
+
+    .image-section {
+        min-height: 450px;
+        padding: 30px;
+        gap: 30px;
+    }
+
+    .welcome-content h1 {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    .welcome-description {
+        font-size: 13px;
+    }
+
+    .feature-card {
+        display: none;
+    }
+
+    .register-section {
+        min-height: auto;
+        padding: 35px 22px;
+    }
+
+    .register-card {
+        max-width: 650px;
+    }
+}
+
+@media (max-width: 540px) {
+    .image-section {
+        min-height: 380px;
+        padding: 25px;
+    }
+
+    .brand h2 {
+        font-size: 24px;
+    }
+
+    .welcome-content h1 {
+        font-size: 35px;
+    }
+
+    .register-card {
+        padding: 27px 19px;
+        border-radius: 17px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .header h2 {
+        font-size: 25px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="register-container">
+
+    <!-- ==========================================
+         LEFT: REAL STUDENT IMAGE
+    =========================================== -->
+
+    <section class="image-section">
+
+        <a href="/" class="brand">
+
+            <div class="brand-logo">Z</div>
+
+            <div>
+                <h2>ZenVora</h2>
+                <p>Student Feedback Analysis System</p>
+            </div>
+
+        </a>
+
+        <div class="welcome-content">
+
+            <div class="welcome-badge">
+                🎓 STUDENT COMMUNITY
+            </div>
+
+            <h1>
+                Your Voice<br>
+                Builds a<br>
+                <span>Better Campus</span>
+            </h1>
+
+            <p class="welcome-description">
+                Join our student community and help improve
+                education through meaningful feedback.
+                Create your account, share your experiences,
+                and become part of positive change.
+            </p>
+
+            <div class="feature-card">
+
+                <div class="feature-title">
+                    WHY YOUR FEEDBACK MATTERS
+                </div>
+
+                <div class="feature-item">
+
+                    <div class="feature-icon">💬</div>
+
+                    <div class="feature-text">
+                        <h3>Share Your Feedback</h3>
+                        <p>Let your voice be heard.</p>
+                    </div>
+
+                </div>
+
+                <div class="feature-item">
+
+                    <div class="feature-icon">📊</div>
+
+                    <div class="feature-text">
+                        <h3>Improve Teaching Quality</h3>
+                        <p>Help create better learning experiences.</p>
+                    </div>
+
+                </div>
+
+                <div class="feature-item">
+
+                    <div class="feature-icon">👥</div>
+
+                    <div class="feature-text">
+                        <h3>Create Positive Change</h3>
+                        <p>Build a brighter tomorrow together.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="image-footer">
+            ZENVORA · STUDENT FEEDBACK PLATFORM
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         RIGHT: REGISTRATION FORM
+    =========================================== -->
+
+    <section class="register-section">
+
+        <div class="register-card">
+
+            <div class="header">
+
+                <div class="header-icon">🎓</div>
+
+                <h2>
+                    Create Your <span>Account</span>
+                </h2>
+
+                <p>
+                    Join ZenVora and make your voice count.<br>
+                    Fill in your details to get started.
+                </p>
+
+            </div>
+
+            <!-- DJANGO MESSAGES -->
+
+            {% if messages %}
+
+            <div class="messages" role="alert">
+
+                {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+            <!-- REGISTRATION FORM -->
+
+            <form method="POST" id="registerForm" novalidate>
+
+                {% csrf_token %}
+
+                <div class="form-grid">
+
+                    <!-- FULL NAME -->
+
+                    <div class="form-group full-width">
+
+                        <label for="name">Full Name</label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">👤</span>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-control"
+                                placeholder="Enter your full name"
+                                value="{{ form_data.name|default:'' }}"
+                                autocomplete="name"
+                                minlength="3"
+                                required
+                            >
+
+                        </div>
+
+                        <span class="field-error" id="nameError"></span>
+
+                    </div>
+
+                    <!-- COLLEGE EMAIL -->
+
+                    <div class="form-group full-width">
+
+                        <label for="email">College Email</label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">✉️</span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control"
+                                placeholder="yourname@kristujayanti.com"
+                                value="{{ form_data.email|default:'' }}"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                        <small class="helper">
+                            Use your official @kristujayanti.com email address.
+                        </small>
+
+                        <span class="field-error" id="emailError"></span>
+
+                    </div>
+
+                    <!-- DEPARTMENT -->
+
+                    <div class="form-group">
+
+                        <label for="department">Department</label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">🏫</span>
+
+                            <select
+                                id="department"
+                                name="department"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="">Select Department</option>
+
+                                <option value="MCA"
+                                    {% if form_data.department == 'MCA' %}selected{% endif %}>
+                                    MCA
+                                </option>
+
+                                <option value="MBA"
+                                    {% if form_data.department == 'MBA' %}selected{% endif %}>
+                                    MBA
+                                </option>
+
+                                <option value="BBA"
+                                    {% if form_data.department == 'BBA' %}selected{% endif %}>
+                                    BBA
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <span class="field-error" id="departmentError"></span>
+
+                    </div>
+
+                    <!-- SEMESTER -->
+
+                    <div class="form-group">
+
+                        <label for="semester">Semester</label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">📅</span>
+
+                            <select
+                                id="semester"
+                                name="semester"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="">Select Semester</option>
+
+                                <option value="1"
+                                    {% if form_data.semester == '1' %}selected{% endif %}>
+                                    1st Semester
+                                </option>
+
+                                <option value="2"
+                                    {% if form_data.semester == '2' %}selected{% endif %}>
+                                    2nd Semester
+                                </option>
+
+                                <option value="3"
+                                    {% if form_data.semester == '3' %}selected{% endif %}>
+                                    3rd Semester
+                                </option>
+
+                                <option value="4"
+                                    {% if form_data.semester == '4' %}selected{% endif %}>
+                                    4th Semester
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <span class="field-error" id="semesterError"></span>
+
+                    </div>
+
+                    <!-- CLASS -->
+
+                    <div class="form-group full-width">
+
+                        <label for="class_name">Class</label>
+
+                        <div class="input-box">
+
+                            <span class="input-icon">👥</span>
+
+                            <select
+                                id="class_name"
+                                name="class_name"
+                                class="form-control"
+                                required
+                            >
+
+                                <option value="">Select Class</option>
+
+                                <option value="A"
+                                    {% if form_data.class_name == 'A' %}selected{% endif %}>
+                                    Class A
+                                </option>
+
+                                <option value="B"
+                                    {% if form_data.class_name == 'B' %}selected{% endif %}>
+                                    Class B
+                                </option>
+
+                                <option value="C"
+                                    {% if form_data.class_name == 'C' %}selected{% endif %}>
+                                    Class C
+                                </option>
+
+                                <option value="D"
+                                    {% if form_data.class_name == 'D' %}selected{% endif %}>
+                                    Class D
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <span class="field-error" id="classError"></span>
+
+                    </div>
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="password">Password</label>
+
+                        <div class="input-box password-box">
+
+                            <span class="input-icon">🔒</span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="Minimum 8 characters"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                data-target="password"
+                                aria-pressed="false"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <div class="password-strength" id="passwordStrength">
+                            Minimum 8 characters
+                        </div>
+
+                        <span class="field-error" id="passwordError"></span>
+
+                    </div>
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="confirm_password">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-box password-box">
+
+                            <span class="input-icon">🔐</span>
+
+                            <input
+                                type="password"
+                                id="confirm_password"
+                                name="confirm_password"
+                                class="form-control"
+                                placeholder="Re-enter password"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                data-target="confirm_password"
+                                aria-pressed="false"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <span
+                            class="field-error"
+                            id="confirmPasswordError"
+                        ></span>
+
+                    </div>
+
+                </div>
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                    id="submitBtn"
+                >
+                    Create Account →
+                </button>
+
+            </form>
+
+            <div class="divider">OR</div>
+
+            <div class="login-text">
+                Already have an account?
+                <a href="/login/">Login here</a>
+            </div>
+
+            <a href="/" class="home-link">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+(function () {
+    "use strict";
+
+    const form = document.getElementById("registerForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const departmentInput = document.getElementById("department");
+    const semesterInput = document.getElementById("semester");
+    const classInput = document.getElementById("class_name");
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirm_password");
+
+    const strength = document.getElementById("passwordStrength");
+
+    /* ERROR HELPERS */
+
+    function setError(input, errorId, message) {
+        const error = document.getElementById(errorId);
+
+        error.textContent = message;
+        error.classList.add("show");
+
+        input.classList.add("invalid");
+        input.classList.remove("valid");
+        input.setAttribute("aria-invalid", "true");
+    }
+
+    function clearError(input, errorId) {
+        const error = document.getElementById(errorId);
+
+        error.textContent = "";
+        error.classList.remove("show");
+
+        input.classList.remove("invalid");
+        input.removeAttribute("aria-invalid");
+    }
+
+    /* NAME */
+
+    function validateName() {
+        if (nameInput.value.trim().length < 3) {
+            setError(
+                nameInput,
+                "nameError",
+                "Please enter at least 3 characters."
+            );
+            return false;
+        }
+
+        clearError(nameInput, "nameError");
+        return true;
+    }
+
+    /* EMAIL */
+
+    function validateEmail() {
+        const value = emailInput.value.trim();
+        const pattern = /^[A-Za-z0-9._%+-]+@kristujayanti\.com$/i;
+
+        if (!pattern.test(value)) {
+            setError(
+                emailInput,
+                "emailError",
+                "Enter a valid @kristujayanti.com email."
+            );
+            return false;
+        }
+
+        clearError(emailInput, "emailError");
+        return true;
+    }
+
+    /* SELECT FIELDS */
+
+    function validateSelect(input, errorId, label) {
+        if (!input.value) {
+            setError(
+                input,
+                errorId,
+                "Please select your " + label + "."
+            );
+            return false;
+        }
+
+        clearError(input, errorId);
+        return true;
+    }
+
+    /* PASSWORD STRENGTH */
+
+    function updatePasswordStrength() {
+        const password = passwordInput.value;
+
+        strength.classList.remove("good", "bad");
+
+        if (!password) {
+            strength.textContent = "Minimum 8 characters";
+        } else if (password.length < 8) {
+            strength.textContent = "Password is too short";
+            strength.classList.add("bad");
+        } else if (password.length < 12) {
+            strength.textContent = "Password length accepted";
+            strength.classList.add("good");
+        } else {
+            strength.textContent = "Good password length";
+            strength.classList.add("good");
+        }
+    }
+
+    function validatePassword() {
+        if (passwordInput.value.length < 8) {
+            setError(
+                passwordInput,
+                "passwordError",
+                "Password must contain at least 8 characters."
+            );
+            return false;
+        }
+
+        clearError(passwordInput, "passwordError");
+        return true;
+    }
+
+    /* CONFIRM PASSWORD */
+
+    function validateConfirm() {
+        const password = passwordInput.value;
+        const confirm = confirmInput.value;
+
+        if (!confirm) {
+            setError(
+                confirmInput,
+                "confirmPasswordError",
+                "Please confirm your password."
+            );
+            return false;
+        }
+
+        if (password !== confirm) {
+            setError(
+                confirmInput,
+                "confirmPasswordError",
+                "Passwords do not match."
+            );
+            return false;
+        }
+
+        clearError(confirmInput, "confirmPasswordError");
+        confirmInput.classList.add("valid");
+        return true;
+    }
+
+    /* LIVE VALIDATION */
+
+    nameInput.addEventListener("input", function () {
+        if (nameInput.value.trim().length >= 3) {
+            clearError(nameInput, "nameError");
+        }
+    });
+
+    nameInput.addEventListener("blur", validateName);
+
+    emailInput.addEventListener("input", function () {
+        if (emailInput.value.trim()) {
+            validateEmail();
+        } else {
+            clearError(emailInput, "emailError");
+        }
+    });
+
+    emailInput.addEventListener("blur", validateEmail);
+
+    departmentInput.addEventListener("change", function () {
+        validateSelect(
+            departmentInput,
+            "departmentError",
+            "department"
+        );
+    });
+
+    semesterInput.addEventListener("change", function () {
+        validateSelect(
+            semesterInput,
+            "semesterError",
+            "semester"
+        );
+    });
+
+    classInput.addEventListener("change", function () {
+        validateSelect(
+            classInput,
+            "classError",
+            "class"
+        );
+    });
+
+    passwordInput.addEventListener("input", function () {
+        updatePasswordStrength();
+
+        if (passwordInput.value.length >= 8) {
+            clearError(passwordInput, "passwordError");
+        }
+
+        if (confirmInput.value) {
+            validateConfirm();
+        }
+    });
+
+    passwordInput.addEventListener("blur", validatePassword);
+
+    confirmInput.addEventListener("input", function () {
+        if (confirmInput.value) {
+            validateConfirm();
+        } else {
+            clearError(confirmInput, "confirmPasswordError");
+            confirmInput.classList.remove("valid");
+        }
+    });
+
+    confirmInput.addEventListener("blur", validateConfirm);
+
+    /* SHOW / HIDE PASSWORD */
+
+    document.querySelectorAll(".toggle-password").forEach(
+        function (button) {
+            button.addEventListener("click", function () {
+                const input = document.getElementById(
+                    button.getAttribute("data-target")
+                );
+
+                const showing = input.type === "password";
+
+                input.type = showing ? "text" : "password";
+                button.textContent = showing ? "Hide" : "Show";
+
+                button.setAttribute(
+                    "aria-pressed",
+                    String(showing)
+                );
+            });
+        }
+    );
+
+    /* FORM SUBMISSION */
+
+    form.addEventListener("submit", function (event) {
+        const checks = [
+            [validateName(), nameInput],
+            [validateEmail(), emailInput],
+            [
+                validateSelect(
+                    departmentInput,
+                    "departmentError",
+                    "department"
+                ),
+                departmentInput
+            ],
+            [
+                validateSelect(
+                    semesterInput,
+                    "semesterError",
+                    "semester"
+                ),
+                semesterInput
+            ],
+            [
+                validateSelect(
+                    classInput,
+                    "classError",
+                    "class"
+                ),
+                classInput
+            ],
+            [validatePassword(), passwordInput],
+            [validateConfirm(), confirmInput]
+        ];
+
+        const firstInvalid = checks.find(function (item) {
+            return !item[0];
+        });
+
+        if (firstInvalid) {
+            event.preventDefault();
+            firstInvalid[1].focus();
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Creating Account...";
+    });
+
+    window.addEventListener("pageshow", function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Account →";
+    });
+
+})();
+</script>
+
+</body>
+</html>

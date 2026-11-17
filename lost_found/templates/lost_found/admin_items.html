@@ -1,0 +1,1260 @@
+
+{% load lost_found_tags %}
+{% get_lost_found_data as lf %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZenVora | Unified Admin Dashboard</title>
+
+<style>
+:root {
+  --navy:#111827;
+  --blue:#4f46e5;
+  --light:#f5f7fb;
+  --ink:#172033;
+  --muted:#65748b;
+  --line:#e3e8f1;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  font:14px/1.55 "Segoe UI",Arial,sans-serif;
+  background:var(--light);
+  color:var(--ink);
+}
+a { color:inherit;text-decoration:none; }
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+.sidebar {
+  width:246px;
+  position:fixed;
+  inset:0 auto 0 0;
+  background:var(--navy);
+  color:white;
+  padding:24px 18px;
+  overflow:auto;
+  z-index:20;
+}
+.brand {
+  padding:9px 12px 23px;
+  border-bottom:1px solid #374151;
+  margin-bottom:23px;
+}
+.brand h2 { color:#69a6ff;font-size:24px;margin:0; }
+.brand p { font-size:12px;color:#a6b2c5;margin:4px 0; }
+.nav-title {
+  color:#8190a7;
+  font-size:10px;
+  letter-spacing:1.1px;
+  text-transform:uppercase;
+  margin:23px 12px 10px;
+}
+.nav-link {
+  display:block;
+  color:#d6dce8;
+  padding:12px;
+  border-radius:10px;
+  margin:5px 0;
+  font-size:13px;
+}
+.nav-link:hover { background:#283346; }
+.nav-link.active {
+  background:#37348a;
+  color:#fff;
+  border-left:3px solid #8ba2ff;
+}
+.admin-profile {
+  margin-top:35px;
+  border-radius:13px;
+  padding:14px;
+  background:#202b3c;
+}
+.admin-profile small { color:#a2aec0; }
+.admin-profile strong {
+  font-size:12px;
+  display:block;
+  overflow-wrap:anywhere;
+}
+.logout {
+  display:block;
+  color:#fda4af;
+  font-size:12px;
+  margin-top:13px;
+}
+.main {
+  margin-left:246px;
+  padding:28px;
+  min-height:100vh;
+  max-width:1900px;
+}
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+  margin-bottom:23px;
+}
+.topbar h1 { font-size:27px;margin:0;color:#101c30; }
+.topbar p { color:var(--muted);font-size:13px;margin:4px 0; }
+.date {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 15px;
+  color:var(--muted);
+  white-space:nowrap;
+  font-size:12px;
+}
+.tab-view { display:none; }
+.tab-view.active { display:block; }
+.panel {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:24px;
+  box-shadow:0 3px 16px #13233c08;
+}
+.panel-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:19px;
+}
+.panel-header h2 { margin:0;font-size:19px; }
+.panel-header p {
+  margin:5px 0 0;
+  font-size:12px;
+  color:var(--muted);
+}
+.stats-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+.stat-card {
+  border-radius:14px;
+  background:white;
+  border:1px solid var(--line);
+  padding:21px;
+}
+.stat-label { color:var(--muted);font-size:12px; }
+.stat-value { font-size:29px;font-weight:750;margin:7px 0; }
+.stat-note { color:#91a0b1;font-size:11px; }
+.course-filter-panel {
+  background:linear-gradient(135deg,#fff,#f5f6ff);
+  border-color:#cdd5fd;
+}
+.filter-form {
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+  background:#f8faff;
+  padding:15px;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+.filter-group { flex:1;min-width:190px; }
+label {
+  font-size:12px;
+  font-weight:650;
+  display:block;
+  margin-bottom:7px;
+  color:#37465b;
+}
+input,select,textarea {
+  width:100%;
+  border:1px solid #d2dae7;
+  background:white;
+  border-radius:9px;
+  padding:11px;
+  color:#18253a;
+  outline:none;
+}
+input:focus,select:focus,textarea:focus {
+  border-color:#6a6eea;
+  box-shadow:0 0 0 3px #4f46e513;
+}
+textarea { min-height:105px;resize:vertical; }
+.btn {
+  border:0;
+  border-radius:9px;
+  display:inline-block;
+  padding:10px 13px;
+  font-size:12px;
+  font-weight:650;
+  white-space:nowrap;
+}
+.primary { background:var(--blue);color:white; }
+.primary:hover { background:#3b35c9; }
+.csv { background:#dcfce7;color:#166534; }
+.pdf { background:#fee2e2;color:#b91c1c; }
+.edit { background:#dbeafe;color:#1d4ed8; }
+.danger { background:#fee2e2;color:#be123c; }
+.confirm { background:#d1fae5;color:#047857; }
+.muted-btn { background:#eef1f5;color:#475569; }
+.actions {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.actions form { margin:0; }
+.selected-course {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:13px;
+  padding:12px 15px;
+  background:#eef2ff;
+  border-radius:10px;
+}
+.selected-course small { color:var(--muted); }
+.sentiment-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:24px;
+}
+.sentiment-card {
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:20px;
+  background:#fff;
+}
+.sentiment-card h3 { font-size:13px;margin:0 0 7px; }
+.sentiment-card strong { font-size:27px; }
+.sentiment-card small { display:block;color:var(--muted); }
+.pos { color:#059669; }
+.neu { color:#d97706; }
+.neg { color:#dc2626; }
+.table-wrap { width:100%;overflow-x:auto; }
+table {
+  border-collapse:collapse;
+  width:100%;
+  min-width:900px;
+}
+th {
+  text-align:left;
+  background:#f7f9fc;
+  font-size:11px;
+  color:#64748b;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+th,td {
+  padding:13px 11px;
+  border-bottom:1px solid #edf0f5;
+  vertical-align:top;
+}
+td { font-size:12px; }
+tr:hover>td { background:#fafbff; }
+.subtext {
+  display:block;
+  color:#8b9ab0;
+  font-size:11px;
+  overflow-wrap:anywhere;
+}
+.stars { color:#f59e0b; }
+.feedback-text {
+  line-height:1.6;
+  max-width:320px;
+  overflow-wrap:anywhere;
+}
+.pill {
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:99px;
+  font-size:11px;
+  font-weight:650;
+  background:#edf2fa;
+  color:#45566d;
+}
+.pill.available,
+.pill.collected,
+.pill.returned,
+.pill.Positive {
+  background:#dcfce7;
+  color:#166534;
+}
+.pill.reserved,
+.pill.pending,
+.pill.Neutral {
+  background:#fef3c7;
+  color:#92400e;
+}
+.pill.cancelled,
+.pill.Negative {
+  background:#fee2e2;
+  color:#991b1b;
+}
+.course-add-form {
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr auto;
+  gap:10px;
+  margin-bottom:17px;
+}
+.course-edit-row,
+.lf-edit-row { display:none; }
+.course-edit-row.open,
+.lf-edit-row.open { display:table-row; }
+.course-edit-row form {
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr auto;
+  gap:10px;
+}
+.message {
+  padding:12px 16px;
+  border:1px solid #9ddbbf;
+  border-radius:10px;
+  background:#e9fbf1;
+  color:#166534;
+  margin-bottom:15px;
+}
+.message.error {
+  background:#fff1f2;
+  color:#be123c;
+  border-color:#fecdd3;
+}
+.empty {
+  text-align:center;
+  color:var(--muted);
+  padding:34px;
+}
+.lost-hero {
+  background:linear-gradient(125deg,#141e34,#2b4079);
+  border-radius:18px;
+  color:white;
+  padding:27px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+.lost-hero h2 { margin:0 0 8px;font-size:25px; }
+.lost-hero p { color:#d4dff1;margin:0; }
+.lost-hero .symbol { font-size:48px; }
+.lf-add-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.lf-add-grid .wide { grid-column:1/-1; }
+.lf-edit-panel {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  padding:10px 0;
+}
+.lf-edit-panel .wide { grid-column:1/-1; }
+.lf-edit-panel button { justify-self:start; }
+.booking-details {
+  max-width:275px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.footer {
+  text-align:center;
+  color:#94a3b8;
+  font-size:11px;
+  padding:15px;
+}
+@media(max-width:1150px) {
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
+  .course-add-form,
+  .course-edit-row form { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:800px) {
+  .sidebar { width:200px; }
+  .main { margin-left:200px;padding:18px; }
+  .sentiment-grid { grid-template-columns:1fr; }
+}
+@media(max-width:650px) {
+  .sidebar { position:relative;width:100%;height:auto; }
+  .main { margin-left:0;padding:15px; }
+  .stats-grid,
+  .lf-add-grid,
+  .lf-edit-panel,
+  .course-add-form,
+  .course-edit-row form { grid-template-columns:1fr; }
+  .lf-add-grid .wide,
+  .lf-edit-panel .wide { grid-column:auto; }
+  .topbar { align-items:flex-start;flex-direction:column; }
+  .panel { padding:16px; }
+  .lost-hero .symbol { display:none; }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <h2>ZenVora</h2>
+    <p>Campus Intelligence & Management</p>
+  </div>
+
+  <div class="nav-title">Administration</div>
+  <a href="#overview" class="nav-link active" data-section="overview">
+    📊 Overview
+  </a>
+  <a href="#feedback" class="nav-link" data-section="feedback">
+    💬 Feedback
+  </a>
+  <a href="#students" class="nav-link" data-section="students">
+    🎓 Students
+  </a>
+  <a href="#courses" class="nav-link" data-section="courses">
+    📚 Courses
+  </a>
+
+  <div class="nav-title">Campus Services</div>
+  <a href="#lost-found" class="nav-link" data-section="lost-found">
+    📦 Lost &amp; Found
+  </a>
+
+  <div class="admin-profile">
+    <small>Logged in as</small>
+    <strong>{{ admin_email }}</strong>
+    <a class="logout" href="{% url 'admin_logout' %}">
+      ↪ Logout
+    </a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <div class="topbar">
+    <div>
+      <h1 id="pageTitle">Admin Dashboard</h1>
+      <p id="pageSubtitle">
+        Feedback intelligence, courses and campus services.
+      </p>
+    </div>
+    <div class="date">{% now "d M Y" %}</div>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="message {% if message.tags == 'error' %}error{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- ================================================
+       FEEDBACK ADMIN DASHBOARD
+  ================================================= -->
+
+  <div id="feedbackView" class="tab-view active">
+
+    <section id="overview" class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Selected Course Feedback</div>
+        <div class="stat-value">{{ total_feedback|default:0 }}</div>
+        <div class="stat-note">Feedback for selected course</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Registered Students</div>
+        <div class="stat-value">{{ total_students|default:0 }}</div>
+        <div class="stat-note">Total registered students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Courses</div>
+        <div class="stat-value">{{ total_courses|default:0 }}</div>
+        <div class="stat-note">Courses available</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Average Rating</div>
+        <div class="stat-value">{{ average_rating|default:"0.0" }}</div>
+        <div class="stat-note">Out of 5</div>
+      </div>
+    </section>
+
+    <!-- COURSE FILTER -->
+
+    <section class="panel course-filter-panel">
+      <div class="panel-header">
+        <div>
+          <h2>🎯 View Feedback by Course</h2>
+          <p>Select a course to view its ratings and sentiment analysis.</p>
+        </div>
+      </div>
+
+      <form method="GET" action="{% url 'admin_dashboard' %}" class="filter-form">
+        <div class="filter-group">
+          <label for="course_id">Select Course</label>
+          <select id="course_id" name="course_id" required>
+            <option value="">-- Select a Course --</option>
+            {% for course in courses %}
+              <option value="{{ course.id }}"
+                {% if selected_course_id|stringformat:"s" == course.id|stringformat:"s" %}selected{% endif %}>
+                {{ course.name }} —
+                {{ course.get_department_display }} —
+                {{ course.get_semester_display }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button class="btn primary" type="submit">🔍 View Feedback</button>
+
+        {% if selected_course %}
+          <a class="btn muted-btn" href="{% url 'admin_dashboard' %}">
+            ✕ Clear
+          </a>
+        {% endif %}
+      </form>
+
+      {% if selected_course %}
+        <div class="selected-course">
+          <strong>{{ selected_course.name }}</strong>
+          <small>
+            {{ selected_course.get_department_display }} ·
+            {{ selected_course.get_semester_display }}
+          </small>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- SENTIMENT STATISTICS -->
+
+    {% if selected_course %}
+      <div class="sentiment-grid">
+        <div class="sentiment-card pos">
+          <h3>Positive Feedback</h3>
+          <strong>{{ positive_count }}</strong>
+          <small>{{ positive_percentage }}%</small>
+        </div>
+        <div class="sentiment-card neu">
+          <h3>Neutral Feedback</h3>
+          <strong>{{ neutral_count }}</strong>
+          <small>{{ neutral_percentage }}%</small>
+        </div>
+        <div class="sentiment-card neg">
+          <h3>Negative Feedback</h3>
+          <strong>{{ negative_count }}</strong>
+          <small>{{ negative_percentage }}%</small>
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>📈 Sentiment Percentage Analysis</h2>
+            <p>Distribution of feedback sentiment for the selected course.</p>
+          </div>
+        </div>
+        <div style="height:310px;max-width:580px;margin:auto">
+          <canvas id="sentimentPercentageChart"></canvas>
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- COURSE MANAGEMENT -->
+
+    <section class="panel" id="courses">
+      <div class="panel-header">
+        <div>
+          <h2>📚 Course Management</h2>
+          <p>Add, edit, export and delete academic courses.</p>
+        </div>
+      </div>
+
+      <form method="POST"
+            action="{% url 'admin_add_course' %}"
+            class="course-add-form">
+        {% csrf_token %}
+
+        <input name="name" placeholder="Course name" required>
+
+        <select name="department" required>
+          <option value="">Department</option>
+          <option value="MCA">MCA</option>
+          <option value="MBA">MBA</option>
+          <option value="BBA">BBA</option>
+        </select>
+
+        <select name="semester" required>
+          <option value="">Semester</option>
+          <option value="1">1st Semester</option>
+          <option value="2">2nd Semester</option>
+          <option value="3">3rd Semester</option>
+          <option value="4">4th Semester</option>
+        </select>
+
+        <button class="btn primary" type="submit">+ Add Course</button>
+      </form>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Department</th>
+              <th>Semester</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for course in courses %}
+            <tr>
+              <td><strong>{{ course.name }}</strong></td>
+              <td>{{ course.get_department_display }}</td>
+              <td>{{ course.get_semester_display }}</td>
+              <td>
+                <div class="actions">
+                  <button class="btn edit" type="button"
+                          onclick="toggleRow('course-edit-{{ course.id }}')">
+                    ✏ Edit
+                  </button>
+                  <a class="btn csv"
+                     href="{% url 'download_course_csv' course.id %}">
+                    CSV
+                  </a>
+                  <a class="btn pdf"
+                     href="{% url 'download_course_pdf' course.id %}">
+                    PDF
+                  </a>
+                  <form method="POST"
+                        action="{% url 'admin_delete_course' course.id %}"
+                        onsubmit="return confirm('Delete this course?')">
+                    {% csrf_token %}
+                    <button class="btn danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="course-edit-row" id="course-edit-{{ course.id }}">
+              <td colspan="4">
+                <form method="POST"
+                      action="{% url 'admin_update_course' course.id %}">
+                  {% csrf_token %}
+                  <input name="name" value="{{ course.name }}" required>
+
+                  <select name="department">
+                    <option value="MCA" {% if course.department == 'MCA' %}selected{% endif %}>MCA</option>
+                    <option value="MBA" {% if course.department == 'MBA' %}selected{% endif %}>MBA</option>
+                    <option value="BBA" {% if course.department == 'BBA' %}selected{% endif %}>BBA</option>
+                  </select>
+
+                  <select name="semester">
+                    <option value="1" {% if course.semester|stringformat:"s" == '1' %}selected{% endif %}>1st Semester</option>
+                    <option value="2" {% if course.semester|stringformat:"s" == '2' %}selected{% endif %}>2nd Semester</option>
+                    <option value="3" {% if course.semester|stringformat:"s" == '3' %}selected{% endif %}>3rd Semester</option>
+                    <option value="4" {% if course.semester|stringformat:"s" == '4' %}selected{% endif %}>4th Semester</option>
+                  </select>
+
+                  <button class="btn primary" type="submit">
+                    Save Changes
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td class="empty" colspan="4">No courses available.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- REGISTERED STUDENTS -->
+
+    <section class="panel" id="students">
+      <div class="panel-header">
+        <div>
+          <h2>🎓 Registered Students</h2>
+          <p>Students registered in the system.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Semester</th>
+              <th>Class</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for student in students %}
+            <tr>
+              <td><strong>{{ student.name }}</strong></td>
+              <td>{{ student.email }}</td>
+              <td>{{ student.get_department_display }}</td>
+              <td>{{ student.get_semester_display }}</td>
+              <td>{{ student.class_name }}</td>
+            </tr>
+          {% empty %}
+            <tr><td class="empty" colspan="5">No students registered yet.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FEEDBACK MANAGEMENT -->
+
+    <section class="panel" id="feedback">
+      <div class="panel-header">
+        <div>
+          <h2>💬 Student Feedback</h2>
+          <p>
+            {% if selected_course %}
+              Feedback for {{ selected_course.name }}
+            {% else %}
+              Select a course above to view feedback.
+            {% endif %}
+          </p>
+        </div>
+
+        {% if selected_course %}
+          <div class="actions">
+            <a class="btn csv"
+               href="{% url 'download_course_csv' selected_course.id %}">
+              📊 Download CSV
+            </a>
+            <a class="btn pdf"
+               href="{% url 'download_course_pdf' selected_course.id %}">
+              📄 Download PDF
+            </a>
+            <a class="btn confirm"
+               href="{% url 'download_course_excel' selected_course.id %}">
+              📗 Download Excel
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if selected_course %}
+        {% if feedbacks %}
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Course</th>
+                  <th>Rating</th>
+                  <th>Feedback</th>
+                  <th>Sentiment</th>
+                  <th>Score</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for feedback in feedbacks %}
+                <tr>
+                  <td>
+                    <strong>{{ feedback.student.name }}</strong>
+                    <span class="subtext">{{ feedback.student.email }}</span>
+                  </td>
+
+                  <td>{{ feedback.course.name }}</td>
+
+                  <td>
+                    <span class="stars">
+                      {% if feedback.rating >= 1 %}★{% endif %}
+                      {% if feedback.rating >= 2 %}★{% endif %}
+                      {% if feedback.rating >= 3 %}★{% endif %}
+                      {% if feedback.rating >= 4 %}★{% endif %}
+                      {% if feedback.rating >= 5 %}★{% endif %}
+                    </span>
+                    <span class="subtext">{{ feedback.rating }}/5</span>
+                  </td>
+
+                  <td>
+                    <div class="feedback-text">
+                      {{ feedback.feedback_text }}
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="pill {{ feedback.sentiment }}">
+                      {{ feedback.sentiment }}
+                    </span>
+                  </td>
+
+                  <td>{{ feedback.sentiment_score }}</td>
+
+                  <td>
+                    {{ feedback.created_at|date:"d M Y" }}
+                    <span class="subtext">
+                      {{ feedback.created_at|date:"h:i A" }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="actions">
+                      <a class="btn edit"
+                         href="{% url 'admin_edit_feedback' feedback.id %}">
+                        ✏ Edit
+                      </a>
+                      <form method="POST"
+                            action="{% url 'admin_delete_feedback' feedback.id %}"
+                            onsubmit="return confirm('Delete this feedback permanently?')">
+                        {% csrf_token %}
+                        <button class="btn danger" type="submit">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="empty">
+            No feedback has been submitted for {{ selected_course.name }} yet.
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="empty">
+          🎯 Select a course from the dropdown to view student feedback
+          and sentiment analysis.
+        </div>
+      {% endif %}
+    </section>
+  </div>
+
+  <!-- ================================================
+       LOST AND FOUND - DIRECTLY IN ADMIN DASHBOARD
+  ================================================= -->
+
+  <div id="lostView" class="tab-view">
+    <section id="lost-found">
+
+      <div class="lost-hero">
+        <div>
+          <h2>📦 Lost &amp; Found Management</h2>
+          <p>
+            One dashboard for inventory, student bookings
+            and ownership verification.
+          </p>
+        </div>
+        <div class="symbol">🎒</div>
+      </div>
+
+      <!-- LOST AND FOUND STATISTICS -->
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Found Items</div>
+          <div class="stat-value">{{ lf.total }}</div>
+          <div class="stat-note">All recorded items</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Available Items</div>
+          <div class="stat-value">{{ lf.available }}</div>
+          <div class="stat-note">Visible to students</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Reserved Items</div>
+          <div class="stat-value">{{ lf.reserved }}</div>
+          <div class="stat-note">Awaiting collection</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Pending Bookings</div>
+          <div class="stat-value">{{ lf.pending }}</div>
+          <div class="stat-note">Require verification</div>
+        </div>
+      </div>
+
+      <!-- ADD FOUND ITEM -->
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>➕ Add Found Item</h2>
+            <p>Publish a new item for students to identify and reserve.</p>
+          </div>
+        </div>
+
+        <form method="POST" action="{% url 'lost_found_add' %}">
+          {% csrf_token %}
+          <input type="hidden" name="return_to" value="unified">
+
+          <div class="lf-add-grid">
+            <div>
+              <label for="lfName">Item Name</label>
+              <input id="lfName" name="name" maxlength="150"
+                     placeholder="e.g. Black Wallet" required>
+            </div>
+
+            <div>
+              <label for="lfCategory">Category</label>
+              <select id="lfCategory" name="category">
+                <option>Electronics</option>
+                <option>ID Card</option>
+                <option>Books</option>
+                <option>Accessories</option>
+                <option>Keys</option>
+                <option>Wallet</option>
+                <option selected>Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="lfLocation">Found Location</label>
+              <input id="lfLocation" name="found_location"
+                     placeholder="e.g. College Library" required>
+            </div>
+
+            <div>
+              <label for="lfDate">Date Found</label>
+              <input id="lfDate" type="date" name="found_date"
+                     value="{% now 'Y-m-d' %}" required>
+            </div>
+
+            <div class="wide">
+              <label for="lfImage">Image URL (Optional)</label>
+              <input id="lfImage" type="url" name="image_url"
+                     placeholder="https://example.com/item.jpg">
+            </div>
+
+            <div class="wide">
+              <label for="lfDescription">Description</label>
+              <textarea id="lfDescription" name="description"
+                        placeholder="Describe the item and distinguishing details..."
+                        required></textarea>
+            </div>
+          </div>
+
+          <button class="btn primary" style="margin-top:16px" type="submit">
+            + Add Item
+          </button>
+        </form>
+      </section>
+
+      <!-- ITEM INVENTORY -->
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>📋 Item Inventory</h2>
+            <p>
+              Edit item details or delete items without active reservations.
+            </p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Found At</th>
+                <th>Found Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for item in lf.items %}
+              <tr>
+                <td>
+                  <strong>{{ item.name }}</strong>
+                  <span class="subtext">
+                    {{ item.description|truncatechars:65 }}
+                  </span>
+                </td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.found_location }}</td>
+                <td>{{ item.found_date|date:"d M Y" }}</td>
+                <td>
+                  <span class="pill {{ item.status }}">
+                    {{ item.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  <div class="actions">
+                    <button type="button" class="btn edit"
+                            onclick="toggleRow('lf-edit-{{ item.id }}')">
+                      ✏ Edit
+                    </button>
+
+                    {% if item.status != 'reserved' %}
+                      <form method="POST"
+                            action="{% url 'lost_found_delete' item.id %}"
+                            onsubmit="return confirm('Permanently delete this item and its booking history?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="unified">
+                        <button class="btn danger" type="submit">
+                          Delete
+                        </button>
+                      </form>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+
+              <!-- INLINE ITEM EDIT FORM -->
+
+              <tr class="lf-edit-row" id="lf-edit-{{ item.id }}">
+                <td colspan="6">
+                  <form method="POST"
+                        action="{% url 'lost_found_edit' item.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="return_to" value="unified">
+
+                    <div class="lf-edit-panel">
+                      <div>
+                        <label>Item Name</label>
+                        <input name="name" value="{{ item.name }}" required>
+                      </div>
+
+                      <div>
+                        <label>Category</label>
+                        <select name="category">
+                          <option value="Electronics" {% if item.category == 'Electronics' %}selected{% endif %}>Electronics</option>
+                          <option value="ID Card" {% if item.category == 'ID Card' %}selected{% endif %}>ID Card</option>
+                          <option value="Books" {% if item.category == 'Books' %}selected{% endif %}>Books</option>
+                          <option value="Accessories" {% if item.category == 'Accessories' %}selected{% endif %}>Accessories</option>
+                          <option value="Keys" {% if item.category == 'Keys' %}selected{% endif %}>Keys</option>
+                          <option value="Wallet" {% if item.category == 'Wallet' %}selected{% endif %}>Wallet</option>
+                          <option value="Other" {% if item.category == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label>Found Location</label>
+                        <input name="found_location"
+                               value="{{ item.found_location }}" required>
+                      </div>
+
+                      <div>
+                        <label>Found Date</label>
+                        <input type="date" name="found_date"
+                               value="{{ item.found_date|date:'Y-m-d' }}" required>
+                      </div>
+
+                      <div class="wide">
+                        <label>Image URL</label>
+                        <input type="url" name="image_url"
+                               value="{{ item.image_url }}">
+                      </div>
+
+                      <div class="wide">
+                        <label>Description</label>
+                        <textarea name="description" required>{{ item.description }}</textarea>
+                      </div>
+
+                      <button class="btn primary" type="submit">
+                        Save Item Changes
+                      </button>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="empty">
+                  No lost items added yet. Use the form above to add
+                  your first item.
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- COLLECTION BOOKINGS -->
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>🗓️ Collection Bookings</h2>
+            <p>
+              Check ownership details before releasing an item.
+              Pending bookings can be cancelled.
+            </p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Student</th>
+                <th>Collection Slot</th>
+                <th>Ownership Details</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for booking in lf.bookings %}
+              <tr>
+                <td><strong>{{ booking.item.name }}</strong></td>
+                <td>
+                  {{ booking.student.name }}
+                  <span class="subtext">{{ booking.student.email }}</span>
+                </td>
+                <td>
+                  {{ booking.collection_date|date:"d M Y" }}
+                  <span class="subtext">
+                    {{ booking.collection_time|time:"h:i A" }}
+                  </span>
+                </td>
+                <td>
+                  <div class="booking-details">
+                    {{ booking.ownership_details }}
+                  </div>
+                </td>
+                <td>
+                  <span class="pill {{ booking.status }}">
+                    {{ booking.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  {% if booking.status == 'pending' %}
+                    <div class="actions">
+
+                      <form method="POST"
+                            action="{% url 'lost_found_return' booking.id %}"
+                            onsubmit="return confirm('Have you VERIFIED that this student owns the item?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="unified">
+                        <button class="btn confirm" type="submit">
+                          ✓ Confirm Return
+                        </button>
+                      </form>
+
+                      <form method="POST"
+                            action="{% url 'lost_found_cancel' booking.id %}"
+                            onsubmit="return confirm('Cancel this reservation and make the item available again?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="unified">
+                        <button class="btn danger" type="submit">
+                          Cancel
+                        </button>
+                      </form>
+
+                    </div>
+                  {% else %}
+                    <span class="subtext">No pending action</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="empty">
+                  No collection bookings yet.
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </section>
+  </div>
+
+  <div class="footer">
+    ZenVora • Student Feedback Intelligence &amp; Campus Services
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+function toggleRow(id) {
+  var row = document.getElementById(id);
+  if (row) {
+    row.classList.toggle('open');
+  }
+}
+
+function showSection() {
+  var hash = (window.location.hash || '#overview').substring(1);
+  var isLost = hash === 'lost-found';
+
+  document.getElementById('feedbackView')
+    .classList.toggle('active', !isLost);
+
+  document.getElementById('lostView')
+    .classList.toggle('active', isLost);
+
+  document.getElementById('pageTitle').textContent =
+    isLost ? 'Lost & Found Management' : 'Admin Dashboard';
+
+  document.getElementById('pageSubtitle').textContent =
+    isLost
+    ? 'Manage inventory, bookings and verified returns in one place.'
+    : 'Feedback intelligence, courses and campus services.';
+
+  document.querySelectorAll('.nav-link').forEach(function(link) {
+    link.classList.toggle(
+      'active',
+      link.getAttribute('data-section') === hash
+    );
+  });
+
+  if (!document.querySelector('.nav-link.active')) {
+    document.querySelector('[data-section="overview"]')
+      .classList.add('active');
+  }
+
+  var target = document.getElementById(hash);
+  if (target) {
+    target.scrollIntoView({behavior:'auto',block:'start'});
+  } else {
+    window.scrollTo(0,0);
+  }
+}
+
+window.addEventListener('hashchange', showSection);
+window.addEventListener('load', showSection);
+
+{% if selected_course %}
+var canvas = document.getElementById('sentimentPercentageChart');
+
+if (canvas && typeof Chart !== 'undefined') {
+  new Chart(canvas, {
+    type:'doughnut',
+    data:{
+      labels:['Positive','Neutral','Negative'],
+      datasets:[{
+        data:[
+          {{ positive_percentage|default:0 }},
+          {{ neutral_percentage|default:0 }},
+          {{ negative_percentage|default:0 }}
+        ],
+        backgroundColor:['#10b981','#f59e0b','#ef4444'],
+        borderWidth:0
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      cutout:'65%',
+      plugins:{legend:{position:'bottom'}}
+    }
+  });
+}
+{% endif %}
+</script>
+</body>
+</html>

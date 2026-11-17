@@ -1,0 +1,2030 @@
+{% load lost_found_tags %}
+{% get_lost_found_data as lf %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | ZenVora</title>
+<style>
+/* =====================================================
+   GLOBAL STYLING
+===================================================== */
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --sidebar: #111827;
+    --sidebar-hover: #1f2937;
+    --background: #f5f7fb;
+    --white: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+button, input, select, textarea {
+    font-family: inherit;
+}
+a {
+    text-decoration: none;
+}
+/* =====================================================
+   SIDEBAR
+===================================================== */
+.sidebar {
+    width: 245px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--sidebar);
+    color: white;
+    padding: 25px 18px;
+    z-index: 100;
+    overflow-y: auto;
+}
+.brand {
+    padding: 10px 12px 25px;
+    border-bottom: 1px solid #374151;
+    margin-bottom: 25px;
+}
+.brand h2 {
+    color: #60a5fa;
+    font-size: 25px;
+    letter-spacing: .5px;
+}
+.brand p {
+    margin-top: 7px;
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 1.6;
+}
+.nav-title {
+    color: #6b7280;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    padding: 0 12px;
+    margin: 20px 0 10px;
+}
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: #d1d5db;
+    padding: 13px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    transition: .2s;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+}
+.nav-link:hover {
+    background: var(--sidebar-hover);
+    color: white;
+}
+.nav-link.active {
+    background: #312e81;
+    color: white;
+    border-left: 3px solid #818cf8;
+}
+.nav-icon {
+    font-size: 18px;
+    width: 23px;
+    text-align: center;
+}
+.admin-profile {
+    margin-top: 30px;
+    background: #1f2937;
+    padding: 15px;
+    border-radius: 12px;
+}
+.admin-profile small {
+    display: block;
+    color: #9ca3af;
+    margin-bottom: 7px;
+}
+.admin-profile strong {
+    font-size: 12px;
+    display: block;
+    word-break: break-word;
+}
+.logout {
+    display: block;
+    color: #fca5a5;
+    margin-top: 14px;
+    font-size: 12px;
+}
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+.main {
+    margin-left: 245px;
+    padding: 30px;
+    min-height: 100vh;
+}
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+.topbar h1 {
+    font-size: 27px;
+    color: #111827;
+}
+.topbar p {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+.date {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+.dashboard-view {
+    display: none;
+}
+.dashboard-view.active {
+    display: block;
+}
+/* =====================================================
+   MESSAGES
+===================================================== */
+.message {
+    padding: 14px 17px;
+    margin-bottom: 17px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+.message.success {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+.message.error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+/* =====================================================
+   STATISTICS CARDS
+===================================================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+.stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(15,23,42,.04);
+}
+.stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+.stat-note {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 7px;
+}
+/* =====================================================
+   PANELS
+===================================================== */
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(15,23,42,.04);
+}
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.panel-header h2 {
+    font-size: 19px;
+    color: #111827;
+}
+.panel-header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 7px;
+    line-height: 1.6;
+}
+/* =====================================================
+   COURSE FILTER
+===================================================== */
+.course-filter-panel {
+    border-color: #c7d2fe;
+    background: linear-gradient(135deg,#fff,#f5f7ff);
+}
+.course-filter-form {
+    display: flex;
+    align-items: end;
+    gap: 12px;
+    padding: 18px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+}
+.filter-group {
+    flex: 1;
+}
+.filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: bold;
+}
+.filter-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    background: white;
+    color: var(--text);
+    outline: none;
+}
+.filter-group select:focus {
+    border-color: var(--primary);
+}
+.filter-btn {
+    padding: 12px 20px;
+    min-height: 43px;
+    border: none;
+    border-radius: 9px;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+.filter-btn:hover {
+    background: var(--primary-hover);
+}
+.clear-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 17px;
+    min-height: 43px;
+    background: #e5e7eb;
+    border-radius: 9px;
+    font-size: 13px;
+    color: #374151;
+}
+.selected-course {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px;
+    margin-top: 16px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 10px;
+}
+.selected-course span {
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: bold;
+}
+.selected-course strong {
+    font-size: 14px;
+}
+.selected-course small {
+    font-size: 12px;
+    color: var(--muted);
+}
+/* =====================================================
+   SENTIMENT CARDS
+===================================================== */
+.sentiment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+.sentiment-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 22px;
+}
+.sentiment-card h3 {
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+.sentiment-card .number {
+    font-size: 27px;
+    font-weight: bold;
+}
+.sentiment-card .percentage {
+    margin-top: 7px;
+    font-size: 12px;
+    color: var(--muted);
+}
+.positive h3,
+.positive .number {
+    color: #059669;
+}
+.neutral h3,
+.neutral .number {
+    color: #d97706;
+}
+.negative h3,
+.negative .number {
+    color: #dc2626;
+}
+/* =====================================================
+   TABLES
+===================================================== */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 950px;
+}
+th {
+    text-align: left;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+}
+td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 12px;
+    vertical-align: top;
+}
+tr:hover td {
+    background: #fafafa;
+}
+.student-name {
+    color: #111827;
+    font-weight: bold;
+}
+.student-email {
+    display: block;
+    color: #9ca3af;
+    font-size: 10px;
+    margin-top: 5px;
+}
+.feedback-content {
+    max-width: 340px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+/* =====================================================
+   BADGES
+===================================================== */
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+}
+.badge-positive {
+    background: #ecfdf5;
+    color: #047857;
+}
+.badge-neutral {
+    background: #fffbeb;
+    color: #b45309;
+}
+.badge-negative {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+.rating-stars {
+    color: #f59e0b;
+    letter-spacing: 1px;
+}
+/* =====================================================
+   BUTTONS
+===================================================== */
+.btn {
+    display: inline-block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+.btn-edit {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.btn-delete {
+    background: #fef2f2;
+    color: #dc2626;
+}
+.btn-csv {
+    background: #ecfdf5;
+    color: #047857;
+}
+.btn-pdf {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+.btn-success {
+    background: #ecfdf5;
+    color: #047857;
+}
+.action-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+.action-group form {
+    margin: 0;
+}
+/* =====================================================
+   ADD COURSE FORM
+===================================================== */
+.course-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+.course-form input,
+.course-form select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    outline: none;
+    font-size: 12px;
+}
+.course-form input:focus,
+.course-form select:focus {
+    border-color: var(--primary);
+}
+.edit-row {
+    display: none;
+}
+/* =====================================================
+   EMPTY STATES
+===================================================== */
+.empty {
+    text-align: center;
+    padding: 45px 20px;
+    color: var(--muted);
+}
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+.empty h3 {
+    color: #374151;
+    font-size: 16px;
+}
+.empty p {
+    color: #9ca3af;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 12px auto;
+    max-width: 500px;
+}
+/* =====================================================
+   LOST & FOUND INTEGRATION
+===================================================== */
+.lost-hero {
+    background: linear-gradient(125deg,#111827,#253b70);
+    color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+.lost-hero h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+.lost-hero p {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    max-width: 600px;
+}
+.lost-icon {
+    font-size: 65px;
+}
+.lost-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+.lost-feature {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 14px;
+}
+.lost-feature .icon {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+.lost-feature h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.lost-feature p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+.lost-frame-panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.lost-frame-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+.lost-frame-header h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.lost-frame-header p {
+    color: var(--muted);
+    font-size: 12px;
+}
+.lost-frame {
+    display: block;
+    width: 100%;
+    min-height: 1100px;
+    border: none;
+    background: #081120;
+}
+.external-link {
+    background: #eef2ff;
+    color: var(--primary);
+    padding: 11px 15px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.external-link:hover {
+    background: #e0e7ff;
+}
+/* =====================================================
+   FOOTER
+===================================================== */
+footer {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 11px;
+    padding: 25px;
+}
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+@media (max-width: 1100px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .course-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 900px) {
+    .sidebar {
+        width: 200px;
+    }
+    .main {
+        margin-left: 200px;
+        padding: 20px;
+    }
+    .sentiment-grid {
+        grid-template-columns: 1fr;
+    }
+    .lost-features {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 650px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+    .stats-grid,
+    .course-form {
+        grid-template-columns: 1fr;
+    }
+    .topbar,
+    .panel-header,
+    .course-filter-form,
+    .lost-frame-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .date {
+        width: fit-content;
+    }
+    .lost-hero {
+        padding: 22px;
+    }
+    .lost-icon {
+        display: none;
+    }
+    .panel {
+        padding: 17px;
+    }
+    .lost-frame {
+        min-height: 1000px;
+    }
+}
+
+/* =====================================================
+   NATIVE LOST & FOUND: INLINE FORMS & TABLES
+   Scoped to avoid changing feedback controls.
+===================================================== */
+#lostDashboard .lost-hero { margin-bottom:24px; }
+#lostDashboard .lost-hero .symbol { font-size:48px; }
+#lostDashboard .stats-grid { margin-bottom:25px; }
+#lostDashboard .table-wrap { width:100%;overflow-x:auto; }
+#lostDashboard table { min-width:900px; }
+#lostDashboard label {
+    display:block;margin-bottom:7px;color:#374151;font-weight:600;font-size:12px;
+}
+#lostDashboard input,
+#lostDashboard select,
+#lostDashboard textarea {
+    width:100%;background:#fff;color:#1f2937;
+    padding:11px 12px;border:1px solid #d1d5db;border-radius:9px;
+    outline:none;font-size:13px;
+}
+#lostDashboard textarea { min-height:100px;resize:vertical; }
+#lostDashboard input:focus,
+#lostDashboard select:focus,
+#lostDashboard textarea:focus { border-color:#6366f1;box-shadow:0 0 0 3px #6366f11c; }
+#lostDashboard .lf-add-grid,
+#lostDashboard .lf-edit-panel {
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;
+}
+#lostDashboard .lf-add-grid .wide,
+#lostDashboard .lf-edit-panel .wide { grid-column:1/-1; }
+#lostDashboard .lf-edit-panel { padding:12px 0; }
+#lostDashboard .lf-edit-row { display:none; }
+#lostDashboard .lf-edit-row.open { display:table-row; }
+#lostDashboard .booking-details { max-width:280px;white-space:pre-wrap;overflow-wrap:anywhere; }
+#lostDashboard .subtext { display:block;color:#8391a5;font-size:11px;margin-top:4px;overflow-wrap:anywhere; }
+#lostDashboard .pill {
+    display:inline-block;padding:6px 10px;border-radius:30px;
+    background:#edf2fa;color:#475569;font-size:11px;font-weight:700;
+}
+#lostDashboard .pill.available,
+#lostDashboard .pill.collected,
+#lostDashboard .pill.returned { background:#dcfce7;color:#166534; }
+#lostDashboard .pill.pending,
+#lostDashboard .pill.reserved { background:#fef3c7;color:#92400e; }
+#lostDashboard .pill.cancelled { background:#fee2e2;color:#991b1b; }
+#lostDashboard .actions { display:flex;flex-wrap:wrap;align-items:center;gap:8px; }
+#lostDashboard .actions form { margin:0; }
+#lostDashboard .btn.primary { background:#4f46e5;color:#fff; }
+#lostDashboard .btn.primary:hover { background:#4338ca; }
+#lostDashboard .btn.edit { background:#eff6ff;color:#2563eb; }
+#lostDashboard .btn.danger { background:#fef2f2;color:#b91c1c; }
+#lostDashboard .btn.confirm { background:#dcfce7;color:#166534; }
+#lostDashboard .btn.csv { background:#dcfce7;color:#166534; }
+#lostDashboard .btn.pdf { background:#fef2f2;color:#b91c1c; }
+#lostDashboard .btn.muted-btn { background:#e5e7eb;color:#374151; }
+#lostDashboard .empty { text-align:center;color:#64748b;padding:35px 18px; }
+@media(max-width:650px) {
+    #lostDashboard .lf-add-grid,
+    #lostDashboard .lf-edit-panel { grid-template-columns:1fr; }
+    #lostDashboard .lf-add-grid .wide,
+    #lostDashboard .lf-edit-panel .wide { grid-column:auto; }
+    #lostDashboard .lost-hero .symbol { display:none; }
+}
+
+</style>
+</head>
+<body>
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+<aside class="sidebar">
+    <div class="brand">
+        <h2>ZenVora</h2>
+        <p>Campus Intelligence & Management</p>
+    </div>
+    <div class="nav-title">
+        Administration
+    </div>
+    <a
+        href="#overview"
+        class="nav-link active"
+        data-view="feedback"
+        onclick="showDashboard('feedback','overview')"
+    >
+        <span class="nav-icon">📊</span>
+        Overview
+    </a>
+    <a
+        href="#feedback"
+        class="nav-link"
+        data-view="feedback"
+        onclick="showDashboard('feedback','feedback')"
+    >
+        <span class="nav-icon">💬</span>
+        Feedback
+    </a>
+    <a
+        href="#students"
+        class="nav-link"
+        data-view="feedback"
+        onclick="showDashboard('feedback','students')"
+    >
+        <span class="nav-icon">🎓</span>
+        Students
+    </a>
+    <a
+        href="#courses"
+        class="nav-link"
+        data-view="feedback"
+        onclick="showDashboard('feedback','courses')"
+    >
+        <span class="nav-icon">📚</span>
+        Courses
+    </a>
+    <div class="nav-title">
+        Campus Services
+    </div>
+    <a
+        href="#lost-found"
+        class="nav-link"
+        data-view="lost"
+        onclick="showDashboard('lost','lost-found')"
+    >
+        <span class="nav-icon">📦</span>
+        Lost & Found
+    </a>
+    <div class="admin-profile">
+        <small>Logged in as</small>
+        <strong>{{ admin_email }}</strong>
+        <a
+            href="{% url 'admin_logout' %}"
+            class="logout"
+        >
+            ↪ Logout
+        </a>
+    </div>
+</aside>
+<!-- =====================================================
+     MAIN DASHBOARD
+===================================================== -->
+<main class="main">
+    <div class="topbar">
+        <div>
+            <h1 id="dashboardTitle">
+                Admin Dashboard
+            </h1>
+            <p id="dashboardSubtitle">
+                Monitor student feedback, course sentiment and campus services.
+            </p>
+        </div>
+        <div class="date">
+            {% now "d M Y" %}
+        </div>
+    </div>
+    <!-- DJANGO MESSAGES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message
+                {% if message.tags == 'success' %}
+                    success
+                {% else %}
+                    error
+                {% endif %}
+            ">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- =================================================
+         FEEDBACK DASHBOARD VIEW
+    ================================================= -->
+    <div
+        id="feedbackDashboard"
+        class="dashboard-view active"
+    >
+        <!-- =============================================
+             OVERVIEW
+        ============================================= -->
+        <section id="overview">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">
+                        Selected Course Feedback
+                    </div>
+                    <div class="stat-value">
+                        {{ total_feedback|default:0 }}
+                    </div>
+                    <div class="stat-note">
+                        Feedback for selected course
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        Registered Students
+                    </div>
+                    <div class="stat-value">
+                        {{ total_students|default:0 }}
+                    </div>
+                    <div class="stat-note">
+                        Total registered students
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        Total Courses
+                    </div>
+                    <div class="stat-value">
+                        {{ total_courses|default:0 }}
+                    </div>
+                    <div class="stat-note">
+                        Courses available
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        Average Rating
+                    </div>
+                    <div class="stat-value">
+                        {{ average_rating|default:"0.0" }}
+                    </div>
+                    <div class="stat-note">
+                        Out of 5
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- =============================================
+             COURSE FILTER
+        ============================================= -->
+        <section class="panel course-filter-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>🎯 View Feedback by Course</h2>
+                    <p>
+                        Select a course to view its feedback,
+                        ratings and sentiment analysis.
+                    </p>
+                </div>
+            </div>
+            <form
+                method="GET"
+                action="{% url 'admin_dashboard' %}"
+                class="course-filter-form"
+            >
+                <div class="filter-group">
+                    <label for="course_id">
+                        Select Course
+                    </label>
+                    <select
+                        name="course_id"
+                        id="course_id"
+                        required
+                    >
+                        <option value="">
+                            -- Select a Course --
+                        </option>
+                        {% for course in courses %}
+                            <option
+                                value="{{ course.id }}"
+                                {% if selected_course.id == course.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ course.name }}
+                                —
+                                {{ course.get_department_display }}
+                                —
+                                {{ course.get_semester_display }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button
+                    type="submit"
+                    class="filter-btn"
+                >
+                    🔍 View Feedback
+                </button>
+                {% if selected_course %}
+                    <a
+                        href="{% url 'admin_dashboard' %}"
+                        class="clear-filter-btn"
+                    >
+                        ✕ Clear
+                    </a>
+                {% endif %}
+            </form>
+            {% if selected_course %}
+                <div class="selected-course">
+                    <span>
+                        SELECTED COURSE
+                    </span>
+                    <strong>
+                        {{ selected_course.name }}
+                    </strong>
+                    <small>
+                        {{ selected_course.get_department_display }}
+                        •
+                        {{ selected_course.get_semester_display }}
+                    </small>
+                </div>
+            {% endif %}
+        </section>
+        <!-- =============================================
+             SENTIMENT STATISTICS
+        ============================================= -->
+        {% if selected_course %}
+            <section>
+                <div class="sentiment-grid">
+                    <div class="sentiment-card positive">
+                        <h3>
+                            Positive Feedback
+                        </h3>
+                        <div class="number">
+                            {{ positive_count }}
+                        </div>
+                        <div class="percentage">
+                            {{ positive_percentage }}%
+                        </div>
+                    </div>
+                    <div class="sentiment-card neutral">
+                        <h3>
+                            Neutral Feedback
+                        </h3>
+                        <div class="number">
+                            {{ neutral_count }}
+                        </div>
+                        <div class="percentage">
+                            {{ neutral_percentage }}%
+                        </div>
+                    </div>
+                    <div class="sentiment-card negative">
+                        <h3>
+                            Negative Feedback
+                        </h3>
+                        <div class="number">
+                            {{ negative_count }}
+                        </div>
+                        <div class="percentage">
+                            {{ negative_percentage }}%
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- =========================================
+                 SENTIMENT CHART
+            ========================================= -->
+            <section class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>📈 Sentiment Percentage Analysis</h2>
+                        <p>
+                            Visual distribution of positive,
+                            neutral and negative feedback.
+                        </p>
+                    </div>
+                </div>
+                <div style="
+                    height:320px;
+                    max-width:620px;
+                    position:relative;
+                    margin:0 auto;
+                ">
+                    <canvas id="sentimentPercentageChart"></canvas>
+                </div>
+            </section>
+        {% endif %}
+        <!-- =============================================
+             COURSE MANAGEMENT
+        ============================================= -->
+        <section
+            class="panel"
+            id="courses"
+        >
+            <div class="panel-header">
+                <div>
+                    <h2>📚 Course Management</h2>
+                    <p>
+                        Add, update and manage academic courses.
+                    </p>
+                </div>
+            </div>
+            <!-- ADD COURSE -->
+            <form
+                method="POST"
+                action="{% url 'admin_add_course' %}"
+                class="course-form"
+            >
+                {% csrf_token %}
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Course name"
+                    required
+                >
+                <select
+                    name="department"
+                    required
+                >
+                    <option value="">
+                        Department
+                    </option>
+                    <option value="MCA">MCA</option>
+                    <option value="MBA">MBA</option>
+                    <option value="BBA">BBA</option>
+                </select>
+                <select
+                    name="semester"
+                    required
+                >
+                    <option value="">
+                        Semester
+                    </option>
+                    <option value="1">
+                        1st Semester
+                    </option>
+                    <option value="2">
+                        2nd Semester
+                    </option>
+                    <option value="3">
+                        3rd Semester
+                    </option>
+                    <option value="4">
+                        4th Semester
+                    </option>
+                </select>
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    + Add Course
+                </button>
+            </form>
+            <!-- COURSE TABLE -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Department</th>
+                            <th>Semester</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses %}
+                            <tr id="course-row-{{ course.id }}">
+                                <td>
+                                    <strong>
+                                        {{ course.name }}
+                                    </strong>
+                                </td>
+                                <td>
+                                    {{ course.get_department_display }}
+                                </td>
+                                <td>
+                                    {{ course.get_semester_display }}
+                                </td>
+                                <td>
+                                    <div class="action-group">
+                                        <button
+                                            type="button"
+                                            class="btn btn-edit"
+                                            onclick="openEdit({{ course.id }})"
+                                        >
+                                            ✏ Edit
+                                        </button>
+                                        <a
+                                            href="{% url 'download_course_csv' course.id %}"
+                                            class="btn btn-csv"
+                                        >
+                                            CSV
+                                        </a>
+                                        <a
+                                            href="{% url 'download_course_pdf' course.id %}"
+                                            class="btn btn-pdf"
+                                        >
+                                            PDF
+                                        </a>
+                                        <form
+                                            method="POST"
+                                            action="{% url 'admin_delete_course' course.id %}"
+                                            onsubmit="return confirm('Delete this course?')"
+                                        >
+                                            {% csrf_token %}
+                                            <button
+                                                type="submit"
+                                                class="btn btn-delete"
+                                            >
+                                                🗑 Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- EDIT COURSE ROW -->
+                            <tr
+                                id="edit-row-{{ course.id }}"
+                                class="edit-row"
+                            >
+                                <td colspan="4">
+                                    <form
+                                        method="POST"
+                                        action="{% url 'admin_update_course' course.id %}"
+                                        class="course-form"
+                                    >
+                                        {% csrf_token %}
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value="{{ course.name }}"
+                                            required
+                                        >
+                                        <select
+                                            name="department"
+                                            required
+                                        >
+                                            <option
+                                                value="MCA"
+                                                {% if course.department == "MCA" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                MCA
+                                            </option>
+                                            <option
+                                                value="MBA"
+                                                {% if course.department == "MBA" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                MBA
+                                            </option>
+                                            <option
+                                                value="BBA"
+                                                {% if course.department == "BBA" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                BBA
+                                            </option>
+                                        </select>
+                                        <select
+                                            name="semester"
+                                            required
+                                        >
+                                            <option
+                                                value="1"
+                                                {% if course.semester == "1" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                1st Semester
+                                            </option>
+                                            <option
+                                                value="2"
+                                                {% if course.semester == "2" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                2nd Semester
+                                            </option>
+                                            <option
+                                                value="3"
+                                                {% if course.semester == "3" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                3rd Semester
+                                            </option>
+                                            <option
+                                                value="4"
+                                                {% if course.semester == "4" %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                4th Semester
+                                            </option>
+                                        </select>
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary"
+                                        >
+                                            Save Changes
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="empty">
+                                    No courses available.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- =============================================
+             REGISTERED STUDENTS
+        ============================================= -->
+        <section
+            class="panel"
+            id="students"
+        >
+            <div class="panel-header">
+                <div>
+                    <h2>🎓 Registered Students</h2>
+                    <p>
+                        Students registered in the system.
+                    </p>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Semester</th>
+                            <th>Class</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>
+                                    <span class="student-name">
+                                        {{ student.name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="student-email">
+                                        {{ student.email }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ student.get_department_display }}
+                                </td>
+                                <td>
+                                    {{ student.get_semester_display }}
+                                </td>
+                                <td>
+                                    {{ student.class_name }}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="empty">
+                                    No students registered yet.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- =============================================
+             FEEDBACK MANAGEMENT
+        ============================================= -->
+        <section
+            class="panel"
+            id="feedback"
+        >
+            <div class="panel-header">
+                <div>
+                    <h2>
+                        💬 Student Feedback
+                    </h2>
+                    {% if selected_course %}
+                        <p>
+                            Feedback submitted for
+                            <strong>
+                                {{ selected_course.name }}
+                            </strong>
+                        </p>
+                    {% else %}
+                        <p>
+                            Select a course above to view feedback.
+                        </p>
+                    {% endif %}
+                </div>
+                {% if selected_course %}
+                    <div class="action-group">
+                        <a
+                            href="{% url 'download_course_csv' selected_course.id %}"
+                            class="btn btn-csv"
+                        >
+                            📊 Download CSV
+                        </a>
+                        <a
+                            href="{% url 'download_course_pdf' selected_course.id %}"
+                            class="btn btn-pdf"
+                        >
+                            📄 Download PDF
+                        </a>
+                        <a
+                            href="{% url 'download_course_excel' selected_course.id %}"
+                            class="btn btn-success"
+                        >
+                            📗 Download Excel
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            {% if selected_course %}
+                {% if feedbacks %}
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Course</th>
+                                    <th>Rating</th>
+                                    <th>Feedback</th>
+                                    <th>Sentiment</th>
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for feedback in feedbacks %}
+                                    <tr>
+                                        <td>
+                                            <span class="student-name">
+                                                {{ feedback.student.name }}
+                                            </span>
+                                            <span class="student-email">
+                                                {{ feedback.student.email }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{ feedback.course.name }}
+                                        </td>
+                                        <td>
+                                            <span class="rating-stars">
+                                                {% if feedback.rating >= 1 %}★{% endif %}
+                                                {% if feedback.rating >= 2 %}★{% endif %}
+                                                {% if feedback.rating >= 3 %}★{% endif %}
+                                                {% if feedback.rating >= 4 %}★{% endif %}
+                                                {% if feedback.rating >= 5 %}★{% endif %}
+                                            </span>
+                                            <div>
+                                                <small>
+                                                    {{ feedback.rating }}/5
+                                                </small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="feedback-content">
+                                                {{ feedback.feedback_text }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if feedback.sentiment == "Positive" %}
+                                                <span class="badge badge-positive">
+                                                    Positive
+                                                </span>
+                                            {% elif feedback.sentiment == "Neutral" %}
+                                                <span class="badge badge-neutral">
+                                                    Neutral
+                                                </span>
+                                            {% else %}
+                                                <span class="badge badge-negative">
+                                                    Negative
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ feedback.sentiment_score }}
+                                        </td>
+                                        <td>
+                                            {{ feedback.created_at|date:"d M Y" }}
+                                            <br>
+                                            <small>
+                                                {{ feedback.created_at|date:"h:i A" }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="action-group">
+                                                <a
+                                                    href="{% url 'admin_edit_feedback' feedback.id %}"
+                                                    class="btn btn-edit"
+                                                >
+                                                    ✏ Edit
+                                                </a>
+                                                <form
+                                                    method="POST"
+                                                    action="{% url 'admin_delete_feedback' feedback.id %}"
+                                                    onsubmit="return confirm('Delete this feedback permanently?')"
+                                                >
+                                                    {% csrf_token %}
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-delete"
+                                                    >
+                                                        🗑 Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty">
+                        <div class="empty-icon">
+                            💬
+                        </div>
+                        <h3>
+                            No Feedback for This Course
+                        </h3>
+                        <p>
+                            No student feedback has been submitted
+                            for {{ selected_course.name }} yet.
+                        </p>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="empty">
+                    <div class="empty-icon">
+                        🎯
+                    </div>
+                    <h3>
+                        Select a Course to View Feedback
+                    </h3>
+                    <p>
+                        Choose a course from the dropdown
+                        to view student feedback and sentiment analysis.
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+    <!-- =================================================
+     NATIVE LOST & FOUND ADMIN VIEW (NO IFRAME)
+================================================= -->
+<div id="lostDashboard" class="dashboard-view">
+    <section id="lost-found">
+      <div class="lost-hero">
+        <div>
+          <h2>📦 Lost &amp; Found Management</h2>
+          <p>
+            One dashboard for inventory, student bookings
+            and ownership verification.
+          </p>
+        </div>
+        <div class="symbol">🎒</div>
+      </div>
+      <!-- LOST AND FOUND STATISTICS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Found Items</div>
+          <div class="stat-value">{{ lf.total }}</div>
+          <div class="stat-note">All recorded items</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Available Items</div>
+          <div class="stat-value">{{ lf.available }}</div>
+          <div class="stat-note">Visible to students</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Reserved Items</div>
+          <div class="stat-value">{{ lf.reserved }}</div>
+          <div class="stat-note">Awaiting collection</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Bookings</div>
+          <div class="stat-value">{{ lf.pending }}</div>
+          <div class="stat-note">Require verification</div>
+        </div>
+      </div>
+      <!-- ADD FOUND ITEM -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>➕ Add Found Item</h2>
+            <p>Publish a new item for students to identify and reserve.</p>
+          </div>
+        </div>
+        <form method="POST" action="{% url 'lost_found_add' %}">
+          {% csrf_token %}
+          <input type="hidden" name="return_to" value="unified">
+          <div class="lf-add-grid">
+            <div>
+              <label for="lfName">Item Name</label>
+              <input id="lfName" name="name" maxlength="150"
+                     placeholder="e.g. Black Wallet" required>
+            </div>
+            <div>
+              <label for="lfCategory">Category</label>
+              <select id="lfCategory" name="category">
+                <option>Electronics</option>
+                <option>ID Card</option>
+                <option>Books</option>
+                <option>Accessories</option>
+                <option>Keys</option>
+                <option>Wallet</option>
+                <option selected>Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="lfLocation">Found Location</label>
+              <input id="lfLocation" name="found_location"
+                     placeholder="e.g. College Library" required>
+            </div>
+            <div>
+              <label for="lfDate">Date Found</label>
+              <input id="lfDate" type="date" name="found_date"
+                     value="{% now 'Y-m-d' %}" required>
+            </div>
+            <div class="wide">
+              <label for="lfImage">Image URL (Optional)</label>
+              <input id="lfImage" type="url" name="image_url"
+                     placeholder="https://example.com/item.jpg">
+            </div>
+            <div class="wide">
+              <label for="lfDescription">Description</label>
+              <textarea id="lfDescription" name="description"
+                        placeholder="Describe the item and distinguishing details..."
+                        required></textarea>
+            </div>
+          </div>
+          <button class="btn primary" style="margin-top:16px" type="submit">
+            + Add Item
+          </button>
+        </form>
+      </section>
+      <!-- ITEM INVENTORY -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>📋 Item Inventory</h2>
+            <p>
+              Edit item details or delete items without active reservations.
+            </p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Found At</th>
+                <th>Found Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for item in lf.items %}
+              <tr>
+                <td>
+                  <strong>{{ item.name }}</strong>
+                  <span class="subtext">
+                    {{ item.description|truncatechars:65 }}
+                  </span>
+                </td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.found_location }}</td>
+                <td>{{ item.found_date|date:"d M Y" }}</td>
+                <td>
+                  <span class="pill {{ item.status }}">
+                    {{ item.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  <div class="actions">
+                    <button type="button" class="btn edit"
+                            onclick="toggleRow('lf-edit-{{ item.id }}')">
+                      ✏ Edit
+                    </button>
+                    {% if item.status != 'reserved' %}
+                      <form method="POST"
+                            action="{% url 'lost_found_delete' item.id %}"
+                            onsubmit="return confirm('Permanently delete this item and its booking history?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="unified">
+                        <button class="btn danger" type="submit">
+                          Delete
+                        </button>
+                      </form>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+              <!-- INLINE ITEM EDIT FORM -->
+              <tr class="lf-edit-row" id="lf-edit-{{ item.id }}">
+                <td colspan="6">
+                  <form method="POST"
+                        action="{% url 'lost_found_edit' item.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="return_to" value="unified">
+                    <div class="lf-edit-panel">
+                      <div>
+                        <label>Item Name</label>
+                        <input name="name" value="{{ item.name }}" required>
+                      </div>
+                      <div>
+                        <label>Category</label>
+                        <select name="category">
+                          <option value="Electronics" {% if item.category == 'Electronics' %}selected{% endif %}>Electronics</option>
+                          <option value="ID Card" {% if item.category == 'ID Card' %}selected{% endif %}>ID Card</option>
+                          <option value="Books" {% if item.category == 'Books' %}selected{% endif %}>Books</option>
+                          <option value="Accessories" {% if item.category == 'Accessories' %}selected{% endif %}>Accessories</option>
+                          <option value="Keys" {% if item.category == 'Keys' %}selected{% endif %}>Keys</option>
+                          <option value="Wallet" {% if item.category == 'Wallet' %}selected{% endif %}>Wallet</option>
+                          <option value="Other" {% if item.category == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label>Found Location</label>
+                        <input name="found_location"
+                               value="{{ item.found_location }}" required>
+                      </div>
+                      <div>
+                        <label>Found Date</label>
+                        <input type="date" name="found_date"
+                               value="{{ item.found_date|date:'Y-m-d' }}" required>
+                      </div>
+                      <div class="wide">
+                        <label>Image URL</label>
+                        <input type="url" name="image_url"
+                               value="{{ item.image_url }}">
+                      </div>
+                      <div class="wide">
+                        <label>Description</label>
+                        <textarea name="description" required>{{ item.description }}</textarea>
+                      </div>
+                      <button class="btn primary" type="submit">
+                        Save Item Changes
+                      </button>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="empty">
+                  No lost items added yet. Use the form above to add
+                  your first item.
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- COLLECTION BOOKINGS -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>🗓️ Collection Bookings</h2>
+            <p>
+              Check ownership details before releasing an item.
+              Pending bookings can be cancelled.
+            </p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Student</th>
+                <th>Collection Slot</th>
+                <th>Ownership Details</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for booking in lf.bookings %}
+              <tr>
+                <td><strong>{{ booking.item.name }}</strong></td>
+                <td>
+                  {{ booking.student.name }}
+                  <span class="subtext">{{ booking.student.email }}</span>
+                </td>
+                <td>
+                  {{ booking.collection_date|date:"d M Y" }}
+                  <span class="subtext">
+                    {{ booking.collection_time|time:"h:i A" }}
+                  </span>
+                </td>
+                <td>
+                  <div class="booking-details">
+                    {{ booking.ownership_details }}
+                  </div>
+                </td>
+                <td>
+                  <span class="pill {{ booking.status }}">
+                    {{ booking.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  {% if booking.status == 'pending' %}
+                    <div class="actions">
+                      <form method="POST"
+                            action="{% url 'lost_found_return' booking.id %}"
+                            onsubmit="return confirm('Have you VERIFIED that this student owns the item?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="unified">
+                        <button class="btn confirm" type="submit">
+                          ✓ Confirm Return
+                        </button>
+                      </form>
+                      <form method="POST"
+                            action="{% url 'lost_found_cancel' booking.id %}"
+                            onsubmit="return confirm('Cancel this reservation and make the item available again?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="unified">
+                        <button class="btn danger" type="submit">
+                          Cancel
+                        </button>
+                      </form>
+                    </div>
+                  {% else %}
+                    <span class="subtext">No pending action</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="empty">
+                  No collection bookings yet.
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </div>
+  
+<!-- =================================================
+         FOOTER
+    ================================================= -->
+    <footer>
+        © 2026 ZenVora • Campus Intelligence & Management System
+    </footer>
+</main>
+<!-- =====================================================
+     CHART.JS
+===================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+/* =====================================================
+   INLINE LOST & FOUND ITEM EDIT
+===================================================== */
+function toggleRow(id) {
+    var row = document.getElementById(id);
+    if (row) { row.classList.toggle('open'); }
+}
+
+/* =====================================================
+   SWITCH BETWEEN FEEDBACK AND LOST & FOUND
+===================================================== */
+function showDashboard(view, sectionId) {
+    const feedbackDashboard =
+        document.getElementById("feedbackDashboard");
+    const lostDashboard =
+        document.getElementById("lostDashboard");
+    const title =
+        document.getElementById("dashboardTitle");
+    const subtitle =
+        document.getElementById("dashboardSubtitle");
+    const navLinks =
+        document.querySelectorAll(".nav-link");
+    feedbackDashboard.classList.remove("active");
+    lostDashboard.classList.remove("active");
+    navLinks.forEach(function(link) {
+        link.classList.remove("active");
+    });
+    if (view === "lost") {
+        lostDashboard.classList.add("active");
+        title.textContent =
+            "Lost & Found Management";
+        subtitle.textContent =
+            "Manage campus items, collection bookings and returns.";
+        const lostNav =
+            document.querySelector('[data-view="lost"]');
+        if (lostNav) {
+            lostNav.classList.add("active");
+        }
+    } else {
+        feedbackDashboard.classList.add("active");
+        title.textContent =
+            "Admin Dashboard";
+        subtitle.textContent =
+            "Monitor student feedback, course sentiment and campus services.";
+        const activeLink =
+            document.querySelector(
+                '.nav-link[href="#' + (sectionId || 'overview') + '"]'
+            );
+        if (activeLink) {
+            activeLink.classList.add("active");
+        }
+    }
+    if (sectionId) {
+        const section =
+            document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    } else {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+}
+/* =====================================================
+   PAGE LOADING / BROWSER HISTORY
+===================================================== */
+function restoreDashboard() {
+    const hash = window.location.hash.replace("#", "");
+    if (hash === "lost-found") {
+        showDashboard("lost", "lost-found");
+    } else if (
+        hash === "courses" ||
+        hash === "students" ||
+        hash === "feedback"
+    ) {
+        showDashboard("feedback", hash);
+    } else {
+        showDashboard("feedback", "overview");
+    }
+}
+window.addEventListener("load", restoreDashboard);
+window.addEventListener("hashchange", restoreDashboard);
+/* =====================================================
+   OPEN / CLOSE COURSE EDIT
+===================================================== */
+function openEdit(courseId) {
+    const row =
+        document.getElementById("edit-row-" + courseId);
+    if (row) {
+        if (row.style.display === "table-row") {
+            row.style.display = "none";
+        } else {
+            row.style.display = "table-row";
+        }
+    }
+}
+/* =====================================================
+   SENTIMENT CHART
+===================================================== */
+{% if selected_course %}
+const sentimentChartCanvas =
+    document.getElementById("sentimentPercentageChart");
+if (
+    sentimentChartCanvas &&
+    typeof Chart !== "undefined"
+) {
+    new Chart(sentimentChartCanvas, {
+        type: "doughnut",
+        data: {
+            labels: [
+                "Positive",
+                "Neutral",
+                "Negative"
+            ],
+            datasets: [{
+                data: [
+                    {{ positive_percentage|default:0 }},
+                    {{ neutral_percentage|default:0 }},
+                    {{ negative_percentage|default:0 }}
+                ],
+                backgroundColor: [
+                    "#10b981",
+                    "#f59e0b",
+                    "#ef4444"
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "65%",
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
+        }
+    });
+}
+{% endif %}
+/* =====================================================
+   AUTO HIDE MESSAGES
+===================================================== */
+setTimeout(function() {
+    const messages =
+        document.querySelectorAll(".message");
+    messages.forEach(function(message) {
+        message.style.transition =
+            "opacity 0.5s ease";
+        message.style.opacity = "0";
+        setTimeout(function() {
+            message.remove();
+        }, 500);
+    });
+}, 4000);
+</script>
+</body>
+</html>

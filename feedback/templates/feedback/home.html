@@ -1,0 +1,1279 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZenVora | Student Feedback Analysis System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --blue: #2457f5;
+    --purple: #7954e8;
+    --cyan: #16b8dc;
+    --navy: #132849;
+    --muted: #65758d;
+    --light: #f5f8ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: var(--navy);
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 82px;
+    background: rgba(255,255,255,.94);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid #e9edf6;
+    transition: box-shadow .3s;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 7px 25px rgba(20,40,76,.07);
+}
+
+.nav-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.brand-icon {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 13px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    color: white;
+    font-size: 25px;
+    font-weight: 900;
+    box-shadow: 0 7px 18px rgba(36,87,245,.2);
+}
+
+.brand h2 {
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -.8px;
+}
+
+.brand p {
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+/* NAVIGATION ALIGNED TO RIGHT */
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 30px;
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+.nav-links a {
+    position: relative;
+    font-size: 13px;
+    font-weight: 600;
+    color: #35445c;
+    transition: color .25s;
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    color: var(--blue);
+}
+
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--blue);
+    transition: width .3s;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 25px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    transition: transform .3s, box-shadow .3s, background .3s;
+    cursor: pointer;
+}
+
+.btn-primary {
+    color: white;
+    background: linear-gradient(135deg, var(--blue), #6049e9);
+    box-shadow: 0 8px 24px rgba(36,87,245,.2);
+}
+
+.btn-primary:hover {
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(36,87,245,.3);
+}
+
+.btn-outline {
+    color: var(--blue);
+    border-color: #c9d6fa;
+    background: rgba(255,255,255,.92);
+}
+
+.btn-outline:hover {
+    background: #edf3ff;
+    transform: translateY(-3px);
+}
+
+.nav-cta {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    color: var(--navy);
+    cursor: pointer;
+}
+
+/* ================= HERO ================= */
+
+.hero {
+    min-height: 640px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #f1f6ff;
+}
+
+.hero-photo {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.99) 0%,
+            rgba(255,255,255,.97) 30%,
+            rgba(255,255,255,.86) 50%,
+            rgba(255,255,255,.30) 78%,
+            rgba(255,255,255,.07) 100%
+        ),
+        url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=2000&q=85");
+    background-size: cover;
+    background-position: center;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    top: -180px;
+    left: -120px;
+    border-radius: 50%;
+    background: rgba(90,120,255,.12);
+    filter: blur(55px);
+    pointer-events: none;
+    animation: floating 8s ease-in-out infinite alternate;
+}
+
+.hero-inner {
+    width: 100%;
+    position: relative;
+    padding: 90px 0;
+}
+
+.hero-content {
+    max-width: 690px;
+    animation: fadeUp .9s ease both;
+}
+
+.hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 17px;
+    border-radius: 30px;
+    background: rgba(233,239,255,.9);
+    border: 1px solid #d9e3ff;
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    margin-bottom: 28px;
+}
+
+.tag-dot {
+    width: 9px;
+    height: 9px;
+    background: #1abf74;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(26,191,116,.1);
+}
+
+.hero h1 {
+    font-size: clamp(40px, 4.9vw, 66px);
+    line-height: 1.14;
+    font-weight: 900;
+    letter-spacing: -2.7px;
+    margin-bottom: 27px;
+}
+
+.gradient-text {
+    display: inline-block;
+    background: linear-gradient(
+        100deg,
+        #2457f5 0%,
+        #7654e8 55%,
+        #10a7cf 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-description {
+    max-width: 560px;
+    font-size: 16px;
+    line-height: 1.95;
+    color: #4e607b;
+    margin-bottom: 33px;
+}
+
+.hero-description strong {
+    color: var(--navy);
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.hero-buttons .btn {
+    min-width: 180px;
+    min-height: 51px;
+}
+
+.hero-trust {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #4e607b;
+    font-weight: 600;
+}
+
+.hero-trust span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.hero-trust b {
+    color: #10b981;
+    font-size: 16px;
+}
+
+/* ================= SECTIONS ================= */
+
+.section {
+    padding: 95px 0;
+}
+
+.section-light {
+    background: var(--light);
+}
+
+.section-heading {
+    max-width: 760px;
+    margin: 0 auto 50px;
+    text-align: center;
+}
+
+.eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.section-heading h2 {
+    font-size: clamp(28px, 3.3vw, 40px);
+    font-weight: 800;
+    letter-spacing: -1.4px;
+    line-height: 1.25;
+    margin-bottom: 15px;
+}
+
+.section-heading h2 span,
+.about-content h2 span {
+    color: var(--blue);
+}
+
+.section-heading p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+/* ================= FEATURES ================= */
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+}
+
+.feature-card {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e3eaf6;
+    border-radius: 19px;
+    transition: transform .35s, box-shadow .35s;
+}
+
+.feature-card:hover {
+    transform: translateY(-9px);
+    box-shadow: 0 20px 45px rgba(20,40,76,.11);
+}
+
+.feature-image {
+    overflow: hidden;
+}
+
+.feature-card img {
+    width: 100%;
+    height: 205px;
+    display: block;
+    object-fit: cover;
+    background: #e9efff;
+    transition: transform .5s;
+}
+
+.feature-card:hover img {
+    transform: scale(1.04);
+}
+
+.feature-body {
+    padding: 28px;
+}
+
+.feature-icon {
+    width: 51px;
+    height: 51px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.icon-purple {
+    color: #7546ed;
+    background: #eee8ff;
+}
+
+.icon-blue {
+    color: var(--blue);
+    background: #e7efff;
+}
+
+.icon-green {
+    color: #0ca765;
+    background: #dff8ea;
+}
+
+.feature-body h3 {
+    font-size: 19px;
+    font-weight: 750;
+    margin-bottom: 13px;
+}
+
+.feature-body p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+/* ================= ABOUT ================= */
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 75px;
+    align-items: center;
+}
+
+.about-image {
+    position: relative;
+}
+
+.about-image img {
+    width: 100%;
+    height: 420px;
+    display: block;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(20,40,76,.1);
+}
+
+.about-content h2 {
+    font-size: clamp(28px, 3.3vw, 40px);
+    letter-spacing: -1.4px;
+    line-height: 1.3;
+    margin-bottom: 20px;
+}
+
+.about-content p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.95;
+    margin-bottom: 20px;
+}
+
+.benefits {
+    display: grid;
+    gap: 15px;
+    margin: 25px 0 30px;
+}
+
+.benefit {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.benefit span {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #0ea665;
+    background: #def8e9;
+}
+
+/* ================= HOW IT WORKS ================= */
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 25px;
+}
+
+.step-card {
+    padding: 38px 30px;
+    text-align: center;
+    border-radius: 19px;
+    background: #fff;
+    border: 1px solid #e3eaf6;
+    transition: transform .3s, box-shadow .3s;
+}
+
+.step-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 35px rgba(20,40,76,.08);
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 23px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 19px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+}
+
+.step-card:nth-child(2) .step-number {
+    background: linear-gradient(135deg, #1687ec, #22b8d5);
+}
+
+.step-card:nth-child(3) .step-number {
+    background: linear-gradient(135deg, #0da76a, #31c98b);
+}
+
+.step-card h3 {
+    font-size: 17px;
+    margin-bottom: 12px;
+}
+
+.step-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.85;
+}
+
+/* ================= CTA ================= */
+
+.cta-section {
+    padding: 75px 0;
+}
+
+.cta {
+    padding: 65px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    border-radius: 23px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(115deg, #1c49d8, #7650e9);
+}
+
+.cta::after {
+    content: "";
+    width: 310px;
+    height: 310px;
+    position: absolute;
+    right: 17%;
+    top: -155px;
+    border: 60px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cta h2 {
+    font-size: clamp(25px, 3vw, 35px);
+    margin-bottom: 13px;
+    letter-spacing: -.7px;
+}
+
+.cta p {
+    color: #e1e8ff;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.cta .btn {
+    position: relative;
+    z-index: 1;
+    min-width: 180px;
+    background: #fff;
+    color: var(--blue);
+}
+
+.cta .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,.12);
+}
+
+/* ================= FOOTER ================= */
+
+.footer {
+    padding: 30px 0;
+    background: #102345;
+    color: white;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer .brand h2 {
+    color: #ffffff;
+}
+
+.footer .brand p {
+    color: #b7c6df;
+}
+
+.footer .brand-icon {
+    background: linear-gradient(135deg, #2457f5, #7954e8);
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floating {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(35px);
+    }
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1050px) {
+    .nav-links {
+        gap: 18px;
+        margin-right: 10px;
+    }
+
+    .about-grid {
+        gap: 40px;
+    }
+}
+
+@media (max-width: 780px) {
+    .navbar {
+        height: 72px;
+    }
+
+    .nav-inner {
+        justify-content: space-between;
+    }
+
+    .menu-btn {
+        display: block;
+        margin-left: auto;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        margin: 0;
+        padding: 25px 5%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 22px;
+        background: #fff;
+        box-shadow: 0 15px 25px rgba(20,40,76,.1);
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .nav-links a::after {
+        display: none;
+    }
+
+    .nav-cta {
+        display: none;
+    }
+
+    .hero {
+        min-height: 600px;
+    }
+
+    .hero-photo {
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(255,255,255,.97),
+                rgba(255,255,255,.82)
+            ),
+            url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=85");
+    }
+
+    .hero-inner {
+        padding: 75px 0;
+    }
+
+    .hero h1 {
+        letter-spacing: -1.8px;
+    }
+
+    .features,
+    .steps,
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-image img {
+        height: 330px;
+    }
+
+    .section {
+        padding: 70px 0;
+    }
+
+    .cta {
+        padding: 45px 32px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-inner {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand h2 {
+        font-size: 20px;
+    }
+
+    .brand p {
+        font-size: 9px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+        letter-spacing: -1.5px;
+    }
+
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+    .hero-trust {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .section-heading h2 {
+        font-size: 29px;
+    }
+
+    .cta h2 {
+        font-size: 27px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar" id="navbar">
+    <div class="container nav-inner">
+
+        <!-- LOGO -->
+
+        <a href="/" class="brand">
+            <div class="brand-icon">Z</div>
+            <div>
+                <h2>ZenVora</h2>
+                <p>Student Feedback Analysis System</p>
+            </div>
+        </a>
+
+        <!-- RIGHT-ALIGNED NAVIGATION -->
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="#how-it-works">How It Works</a>
+        </nav>
+
+        <!-- GET STARTED -->
+
+        <a href="/register/" class="btn btn-primary nav-cta">
+            Get Started &rarr;
+        </a>
+
+        <!-- MOBILE MENU -->
+
+        <button
+            class="menu-btn"
+            id="menuBtn"
+            type="button"
+            aria-label="Toggle navigation"
+            aria-controls="navLinks"
+            aria-expanded="false">
+            &#9776;
+        </button>
+
+    </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="home">
+    <div class="hero-photo"></div>
+
+    <div class="container hero-inner">
+        <div class="hero-content">
+
+            <div class="hero-tag">
+                <span class="tag-dot"></span>
+                 STUDENT FEEDBACK PLATFORM
+            </div>
+
+            <h1>
+                Read The Pulse<br>
+                <span class="gradient-text">
+                    Of Every Classroom
+                </span>
+            </h1>
+
+            <p class="hero-description">
+                Give students a voice and transform their opinions
+                into meaningful educational insights.
+                <strong>ZenVora</strong> helps institutions
+                collect feedback, understand sentiment, and
+                create a better learning experience for every student.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="/login/" class="btn btn-primary">
+                    Student Login &rarr;
+                </a>
+
+                <a href="/register/" class="btn btn-outline">
+                    Create Account
+                </a>
+            </div>
+
+            <div class="hero-trust">
+                <span><b>&#10003;</b> Easy Feedback</span>
+                <span><b>&#10003;</b> Smart Sentiment Analysis</span>
+                <span><b>&#10003;</b> Better Learning</span>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+
+<section class="section" id="features">
+    <div class="container">
+
+        <div class="section-heading reveal">
+            <div class="eyebrow">Why Choose ZenVora?</div>
+
+            <h2>
+                A Better Way to
+                <span>Share Your Voice</span>
+            </h2>
+
+            <p>
+                ZenVora makes student feedback simple,
+                meaningful, and useful for improving
+                the academic experience.
+            </p>
+        </div>
+
+        <div class="features">
+
+            <!-- EASY FEEDBACK -->
+
+            <article class="feature-card reveal">
+                <div class="feature-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=85"
+                        alt="Students studying together"
+                        loading="lazy">
+                </div>
+
+                <div class="feature-body">
+                    <div class="feature-icon icon-purple">
+                        &#9993;
+                    </div>
+
+                    <h3>Easy Feedback</h3>
+
+                    <p>
+                        Share your experience about courses,
+                        teaching methods, and classroom activities
+                        through a simple feedback system.
+                    </p>
+                </div>
+            </article>
+
+            <!-- SENTIMENT ANALYSIS -->
+
+            <article class="feature-card reveal">
+                <div class="feature-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=85"
+                        alt="Data analytics dashboard"
+                        loading="lazy">
+                </div>
+
+                <div class="feature-body">
+                    <div class="feature-icon icon-blue">
+                        &#9632;
+                    </div>
+
+                    <h3>Sentiment Analysis</h3>
+
+                    <p>
+                        Student feedback is analysed and
+                        organised into positive, negative,
+                        and neutral sentiments to better
+                        understand student opinions.
+                    </p>
+                </div>
+            </article>
+
+            <!-- BETTER EDUCATION -->
+
+            <article class="feature-card reveal">
+                <div class="feature-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=85"
+                        alt="University graduates celebrating"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;w=800&amp;q=85';">
+                </div>
+
+                <div class="feature-body">
+                    <div class="feature-icon icon-green">
+                        &#10003;
+                    </div>
+
+                    <h3>Better Education</h3>
+
+                    <p>
+                        Identify areas that need improvement
+                        and help create a more supportive,
+                        positive, and effective learning
+                        environment.
+                    </p>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+
+<section class="section section-light" id="about">
+    <div class="container about-grid">
+
+        <div class="about-image reveal">
+            <img
+                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1100&q=85"
+                alt="Students collaborating in a university"
+                loading="lazy">
+        </div>
+
+        <div class="about-content reveal">
+
+            <div class="eyebrow">
+                About Our Platform
+            </div>
+
+            <h2>
+                Helping Students
+                <span>Make an Impact</span>
+            </h2>
+
+            <p>
+                ZenVora is a student feedback and
+                sentiment analysis platform designed
+                to connect student experiences with
+                educational improvement.
+            </p>
+
+            <p>
+                Students can submit course feedback,
+                share opinions, and provide ratings.
+                The system helps administrators understand
+                feedback through organised analysis.
+            </p>
+
+            <div class="benefits">
+                <div class="benefit">
+                    <span>&#10003;</span>
+                    Simple feedback submission
+                </div>
+
+                <div class="benefit">
+                    <span>&#10003;</span>
+                    Course-based ratings and reviews
+                </div>
+
+                <div class="benefit">
+                    <span>&#10003;</span>
+                    Smart sentiment insights
+                </div>
+            </div>
+
+            <a href="/register/" class="btn btn-primary">
+                Join ZenVora &rarr;
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section class="section" id="how-it-works">
+    <div class="container">
+
+        <div class="section-heading reveal">
+            <div class="eyebrow">
+                Simple and Convenient
+            </div>
+
+            <h2>
+                How It <span>Works</span>
+            </h2>
+
+            <p>
+                Share your feedback in three simple steps.
+            </p>
+        </div>
+
+        <div class="steps">
+
+            <article class="step-card reveal">
+                <div class="step-number">01</div>
+
+                <h3>Create Your Account</h3>
+
+                <p>
+                    Register using your college email
+                    and log in to your student account.
+                </p>
+            </article>
+
+            <article class="step-card reveal">
+                <div class="step-number">02</div>
+
+                <h3>Submit Feedback</h3>
+
+                <p>
+                    Choose your course, provide a rating,
+                    and share your honest feedback.
+                </p>
+            </article>
+
+            <article class="step-card reveal">
+                <div class="step-number">03</div>
+
+                <h3>Improve Learning</h3>
+
+                <p>
+                    Your feedback contributes to a better
+                    understanding of classroom experiences
+                    and opportunities for improvement.
+                </p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= CTA ================= -->
+
+<section class="cta-section">
+    <div class="container">
+
+        <div class="cta reveal">
+            <div>
+                <h2>Your Voice. Your Impact.</h2>
+
+                <p>
+                    Be part of a better learning experience.
+                    Start sharing your feedback today.
+                </p>
+            </div>
+
+            <a href="/login/" class="btn">
+                Get Started &rarr;
+            </a>
+        </div>
+
+    </div>
+</section>
+
+</main>
+
+<!-- ================= SIMPLE FOOTER ================= -->
+
+<footer class="footer" id="contact">
+    <div class="container footer-inner">
+
+        <a href="/" class="brand">
+            <div class="brand-icon">Z</div>
+
+            <div>
+                <h2>ZenVora</h2>
+                <p>Student Feedback Analysis System</p>
+            </div>
+        </a>
+
+    </div>
+</footer>
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
+const navbar = document.getElementById("navbar");
+
+/* Mobile menu */
+
+menuBtn.addEventListener("click", function () {
+    const isOpen = navLinks.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(isOpen));
+});
+
+/* Close menu after clicking a link */
+
+navLinks.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function () {
+        navLinks.classList.remove("open");
+        menuBtn.setAttribute("aria-expanded", "false");
+    });
+});
+
+/* Navbar shadow on scroll */
+
+window.addEventListener("scroll", function () {
+    navbar.classList.toggle("scrolled", window.scrollY > 20);
+}, { passive: true });
+
+/* Scroll reveal animations */
+
+const revealElements = document.querySelectorAll(".reveal");
+
+if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    revealElements.forEach(function (element) {
+        observer.observe(element);
+    });
+} else {
+    revealElements.forEach(function (element) {
+        element.classList.add("visible");
+    });
+}
+</script>
+
+</body>
+</html>

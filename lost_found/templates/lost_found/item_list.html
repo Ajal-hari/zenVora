@@ -1,0 +1,1282 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lost & Found | ZenVora</title>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<style>
+
+/* ============================================
+   ZENVORA LIGHT THEME
+============================================ */
+
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --purple: #7c3aed;
+    --blue: #2563eb;
+    --background: #f5f7ff;
+    --white: #ffffff;
+    --text: #172554;
+    --muted: #64748b;
+    --border: #e2e8f0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+/* ============================================
+   NAVIGATION BAR
+============================================ */
+
+.navbar {
+    background: rgba(255,255,255,0.97);
+    padding: 16px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 14px;
+    background: linear-gradient(
+        135deg,
+        #4f46e5,
+        #9333ea
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+}
+
+.logo-text {
+    font-size: 21px;
+    font-weight: 800;
+    color: #4338ca;
+}
+
+.logo-text small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 3px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 11px;
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    padding: 11px 17px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4338ca;
+    background: #eef2ff;
+    transition: 0.2s;
+}
+
+.nav-link:hover {
+    background: #e0e7ff;
+}
+
+.nav-link.active {
+    background: #4f46e5;
+    color: white;
+}
+
+.nav-link.logout {
+    color: white;
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #4f46e5
+    );
+}
+
+/* ============================================
+   HERO
+============================================ */
+
+.hero {
+    padding: 65px 7% 115px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(192,132,252,0.24),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            #11164f,
+            #312e81,
+            #4f46e5
+        );
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    right: -110px;
+    top: -140px;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    left: -100px;
+    bottom: -125px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 850px;
+    margin: auto;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 10px 19px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.22);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 22px;
+}
+
+.hero h1 {
+    font-size: clamp(32px,5vw,52px);
+    font-weight: 800;
+    margin-bottom: 18px;
+    letter-spacing: -1px;
+}
+
+.hero h1 span {
+    color: #c4b5fd;
+}
+
+.hero p {
+    max-width: 680px;
+    margin: 0 auto;
+    color: #e0e7ff;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+/* ============================================
+   MAIN CONTAINER
+============================================ */
+
+.container {
+    max-width: 1220px;
+    margin: -60px auto 65px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 5;
+}
+
+/* ============================================
+   WELCOME PANEL
+============================================ */
+
+.welcome-card {
+    background: white;
+    border: 1px solid #e5eafa;
+    border-radius: 24px;
+    padding: 27px;
+    box-shadow: 0 18px 48px rgba(30,41,59,0.10);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.welcome-left {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.welcome-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 19px;
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #2563eb
+    );
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 27px;
+    flex-shrink: 0;
+}
+
+.welcome-card h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.welcome-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.availability-pill {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    padding: 10px 15px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ============================================
+   SECTION HEADINGS
+============================================ */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 30px 0 19px;
+}
+
+.section-header h2 {
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.section-header p {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* ============================================
+   SEARCH AND FILTER
+============================================ */
+
+.filter-panel {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.filter-group label {
+    display: block;
+    color: #475569;
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 9px;
+}
+
+.filter-group input,
+.filter-group select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 11px;
+    border: 1px solid #dbe3f0;
+    background: #f8faff;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.10);
+}
+
+/* ============================================
+   FOUND ITEM CARDS
+============================================ */
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(270px,1fr)
+    );
+    gap: 21px;
+}
+
+.item-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(30,41,59,0.06);
+    transition: 0.25s;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 45px rgba(79,70,229,0.12);
+    border-color: #c7d2fe;
+}
+
+.item-image {
+    width: 100%;
+    height: 185px;
+    object-fit: cover;
+    background: #eef2ff;
+}
+
+.item-placeholder {
+    width: 100%;
+    height: 185px;
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f3e8ff
+    );
+    display: grid;
+    place-items: center;
+    font-size: 59px;
+}
+
+.item-body {
+    padding: 22px;
+}
+
+.item-badges {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.category-badge {
+    background: #eef2ff;
+    color: #4f46e5;
+    padding: 7px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-available {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 7px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.item-body h3 {
+    font-size: 19px;
+    margin: 17px 0 10px;
+    color: #172554;
+}
+
+.item-description {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #64748b;
+    min-height: 45px;
+}
+
+.item-meta {
+    border-top: 1px solid #edf0f7;
+    margin-top: 15px;
+    padding-top: 14px;
+    color: #475569;
+    font-size: 12px;
+    line-height: 2;
+}
+
+.claim-button {
+    display: block;
+    width: 100%;
+    margin-top: 19px;
+    padding: 14px;
+    text-align: center;
+    color: white;
+    font-weight: 800;
+    font-size: 12px;
+    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #4f46e5
+    );
+    transition: 0.2s;
+}
+
+.claim-button:hover {
+    background: linear-gradient(
+        135deg,
+        #6d28d9,
+        #4338ca
+    );
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   EMPTY STATES
+============================================ */
+
+.empty {
+    background: white;
+    border: 1px dashed #cbd5e1;
+    border-radius: 20px;
+    padding: 42px 22px;
+    text-align: center;
+    color: #64748b;
+}
+
+.empty h3 {
+    color: #172554;
+    font-size: 18px;
+    margin: 12px 0;
+}
+
+.empty p {
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.empty-icon {
+    font-size: 42px;
+}
+
+.grid-empty {
+    grid-column: 1 / -1;
+}
+
+/* ============================================
+   COLLECTION BOOKINGS
+============================================ */
+
+.bookings-section {
+    margin-top: 48px;
+    scroll-margin-top: 100px;
+}
+
+.booking-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 23px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 17px;
+    margin-bottom: 14px;
+    box-shadow: 0 10px 30px rgba(30,41,59,0.05);
+}
+
+.booking-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.booking-icon {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    background: #eef2ff;
+    color: #4f46e5;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+}
+
+.booking-card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.booking-card p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.8;
+}
+
+.booking-status {
+    padding: 9px 15px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 800;
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.booking-status.collected {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.booking-status.cancelled {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+/* ============================================
+   INFORMATION PANEL
+============================================ */
+
+.info-panel {
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #f5f3ff
+    );
+    border: 1px solid #c7d2fe;
+    border-radius: 19px;
+    padding: 25px;
+    margin-top: 35px;
+}
+
+.info-panel h3 {
+    color: #4338ca;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.info-panel p {
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* ============================================
+   ALERT MESSAGES
+============================================ */
+
+.alert {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    border-radius: 12px;
+    padding: 15px 19px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.alert.error {
+    color: #b91c1c;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+/* ============================================
+   FOOTER
+============================================ */
+
+footer {
+    background: #111827;
+    color: white;
+    text-align: center;
+    padding: 26px;
+    margin-top: 60px;
+}
+
+footer p {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media(max-width: 800px) {
+    .navbar {
+        padding: 15px 5%;
+    }
+
+    .filter-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hero {
+        padding: 52px 18px 105px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .welcome-card {
+        padding: 20px;
+    }
+
+    .section-header h2 {
+        font-size: 20px;
+    }
+
+    .booking-card {
+        padding: 20px;
+        align-items: flex-start;
+    }
+
+    .booking-main {
+        align-items: flex-start;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ============================================
+     NAVIGATION
+============================================ -->
+
+<nav class="navbar">
+
+    <a class="logo" href="{% url 'dashboard' %}">
+
+        <div class="logo-icon">
+            🎓
+        </div>
+
+        <div class="logo-text">
+            ZenVora
+            <small>Student Campus Services</small>
+        </div>
+
+    </a>
+
+    <div class="nav-links">
+
+        <a
+            class="nav-link"
+            href="{% url 'dashboard' %}"
+        >
+            Dashboard
+        </a>
+
+        <a
+            class="nav-link"
+            href="{% url 'feedback' %}"
+        >
+            Feedback
+        </a>
+
+        <a
+            class="nav-link active"
+            href="{% url 'lost_found_list' %}"
+        >
+            Lost &amp; Found
+        </a>
+
+        <a
+            class="nav-link logout"
+            href="{% url 'logout' %}"
+        >
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+<!-- ============================================
+     HERO
+============================================ -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            ✦ ZENVORA CAMPUS SERVICES
+        </div>
+
+        <h1>
+            Lost <span>&amp; Found</span>
+        </h1>
+
+        <p>
+            Find your missing belongings on campus.
+            Check available items, verify ownership,
+            and choose a convenient time for collection.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ============================================
+     MAIN CONTENT
+============================================ -->
+
+<main class="container">
+
+    <!-- WELCOME -->
+
+    <section class="welcome-card">
+
+        <div class="welcome-left">
+
+            <div class="welcome-icon">
+                🎒
+            </div>
+
+            <div>
+
+                <h2>
+                    Welcome, {{ student.name }}!
+                </h2>
+
+                <p>
+                    Browse the latest items found
+                    on campus and manage your collection bookings.
+                </p>
+
+            </div>
+
+        </div>
+
+        <span class="availability-pill">
+            {{ items|length }} Items Available
+        </span>
+
+    </section>
+
+    <!-- DJANGO MESSAGES -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert {% if message.tags == 'error' %}error{% endif %}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- ========================================
+         AVAILABLE ITEMS
+    ======================================== -->
+
+    <section>
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    📦 Available Found Items
+                </h2>
+
+                <p>
+                    Check whether your lost item has
+                    been registered by the administrator.
+                </p>
+
+            </div>
+
+            <a class="nav-link" href="#my-bookings">
+                🗓️ My Bookings
+            </a>
+
+        </div>
+
+        <!-- SEARCH AND FILTER -->
+
+        <div class="filter-panel">
+
+            <div class="filter-group">
+
+                <label for="searchInput">
+                    Search Found Items
+                </label>
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Search by item name, description or location..."
+                >
+
+            </div>
+
+            <div class="filter-group">
+
+                <label for="categoryFilter">
+                    Filter by Category
+                </label>
+
+                <select id="categoryFilter">
+
+                    <option value="all">
+                        All Categories
+                    </option>
+
+                    <option value="Electronics">
+                        Electronics
+                    </option>
+
+                    <option value="ID Card">
+                        ID Card
+                    </option>
+
+                    <option value="Books">
+                        Books
+                    </option>
+
+                    <option value="Accessories">
+                        Accessories
+                    </option>
+
+                    <option value="Keys">
+                        Keys
+                    </option>
+
+                    <option value="Wallet">
+                        Wallet
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <!-- ITEMS GRID -->
+
+        <div class="items-grid" id="itemsGrid">
+
+            {% for item in items %}
+
+                <article
+                    class="item-card"
+                    data-search="{{ item.name|lower }} {{ item.description|lower }} {{ item.found_location|lower }}"
+                    data-category="{{ item.category }}"
+                >
+
+                    {% if item.image_url %}
+
+                        <img
+                            class="item-image"
+                            src="{{ item.image_url }}"
+                            alt="{{ item.name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="item-placeholder">
+                            🎒
+                        </div>
+
+                    {% endif %}
+
+                    <div class="item-body">
+
+                        <div class="item-badges">
+
+                            <span class="category-badge">
+                                {{ item.category }}
+                            </span>
+
+                            <span class="status-available">
+                                ● Available
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            {{ item.name }}
+                        </h3>
+
+                        <p class="item-description">
+                            {{ item.description|truncatechars:130 }}
+                        </p>
+
+                        <div class="item-meta">
+
+                            <div>
+                                📍 {{ item.found_location }}
+                            </div>
+
+                            <div>
+                                📅 Found on {{ item.found_date|date:"d M Y" }}
+                            </div>
+
+                        </div>
+
+                        <a
+                            class="claim-button"
+                            href="{% url 'lost_found_book' item.id %}"
+                        >
+                            Verify Ownership &amp; Choose Slot →
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty grid-empty">
+
+                    <div class="empty-icon">
+                        📦
+                    </div>
+
+                    <h3>
+                        No Available Items
+                    </h3>
+
+                    <p>
+                        There are currently no unreserved items.
+                        New found items will appear here
+                        when the administrator adds them.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <div
+            id="filterEmpty"
+            class="empty"
+            style="display:none;margin-top:20px"
+        >
+
+            <div class="empty-icon">
+                🔎
+            </div>
+
+            <h3>No Matching Items</h3>
+
+            <p>
+                Try another item name, location or category.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- ========================================
+         MY COLLECTION BOOKINGS
+    ======================================== -->
+
+    <section
+        class="bookings-section"
+        id="my-bookings"
+    >
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    🗓️ My Collection Bookings
+                </h2>
+
+                <p>
+                    Track your reservations,
+                    collection times and item status.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% for booking in my_bookings %}
+
+            <article class="booking-card">
+
+                <div class="booking-main">
+
+                    <div class="booking-icon">
+                        📦
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {{ booking.item.name }}
+                        </h3>
+
+                        <p>
+
+                            📅 Collection:
+                            {{ booking.collection_date|date:"d M Y" }}
+
+                            at
+
+                            {{ booking.collection_time|time:"h:i A" }}
+
+                        </p>
+
+                        <p>
+
+                            {% if booking.status == "pending" %}
+
+                                Item reserved.
+                                Ownership verification is pending.
+
+                            {% elif booking.status == "collected" %}
+
+                                Item successfully collected.
+
+                            {% else %}
+
+                                Booking cancelled.
+
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <span class="booking-status {{ booking.status }}">
+
+                    {% if booking.status == "pending" %}
+
+                        ⏳ Pending Verification
+
+                    {% elif booking.status == "collected" %}
+
+                        ✓ Collected
+
+                    {% else %}
+
+                        ✕ Cancelled
+
+                    {% endif %}
+
+                </span>
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🗓️
+                </div>
+
+                <h3>
+                    No Bookings Yet
+                </h3>
+
+                <p>
+                    When you reserve a found item,
+                    your booking details will appear here.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </section>
+
+    <!-- INFORMATION -->
+
+    <section class="info-panel">
+
+        <h3>
+            💡 How Lost &amp; Found Works
+        </h3>
+
+        <p>
+            If you recognize an item, click
+            <strong>Verify Ownership &amp; Choose Slot</strong>.
+            Provide identifying details and select your
+            preferred collection date and time.
+            Once booked, the item becomes reserved.
+            The administrator will verify ownership
+            before handing over the item.
+        </p>
+
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        © 2026 ZenVora · Student Feedback &amp; Campus Services
+    </p>
+
+</footer>
+
+<!-- ============================================
+     SEARCH AND FILTER JAVASCRIPT
+============================================ -->
+
+<script>
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const categoryFilter =
+    document.getElementById("categoryFilter");
+
+const itemCards =
+    document.querySelectorAll(".item-card");
+
+const filterEmpty =
+    document.getElementById("filterEmpty");
+
+function filterItems() {
+
+    const query =
+        searchInput.value.trim().toLowerCase();
+
+    const category =
+        categoryFilter.value;
+
+    let visibleCount = 0;
+
+    itemCards.forEach(function(card) {
+
+        const itemText =
+            card.dataset.search;
+
+        const itemCategory =
+            card.dataset.category;
+
+        const matchesSearch =
+            itemText.includes(query);
+
+        const matchesCategory =
+            category === "all" ||
+            itemCategory === category;
+
+        const shouldShow =
+            matchesSearch && matchesCategory;
+
+        card.style.display =
+            shouldShow ? "" : "none";
+
+        if (shouldShow) {
+            visibleCount++;
+        }
+
+    });
+
+    filterEmpty.style.display =
+        itemCards.length > 0 && visibleCount === 0
+            ? "block"
+            : "none";
+}
+
+searchInput.addEventListener(
+    "input",
+    filterItems
+);
+
+categoryFilter.addEventListener(
+    "change",
+    filterItems
+);
+
+</script>
+
+</body>
+</html>
